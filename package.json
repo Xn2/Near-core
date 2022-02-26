@@ -1,0 +1,18 @@
+{
+  "name": "near-core",
+  "version": "0.1.0",
+  "description": "E-Amusement server core",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Lyne (@0xLyne)",
+  "license": "MIT",
+  "dependencies": {
+    "@kamyu/kbinxml": "^1.0.4",
+    "arc4": "^2.1.4",
+    "express": "^4.17.3",
+    "express-xml-bodyparser": "^0.3.0",
+    "md5": "^2.3.0"
+  }
+}
