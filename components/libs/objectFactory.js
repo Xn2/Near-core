@@ -96,6 +96,83 @@ function getPcbEventObject(){
     }
 }
 
+function getEventLogObject(){
+    return {
+        "declaration": {
+            "attributes": {
+                "version": "1.0",
+                "encoding": "SHIFT_JIS"
+            }
+        },
+        "elements": [
+            {
+                "type": "element",
+                "name": "response",
+                "elements": [
+                    {
+                        "type": "element",
+                        "name": "eventlog",
+                        "elements": [
+                            {
+                                "type": "element",
+                                "name": "gamesession",
+                                "attributes": {
+                                    "__type": "s64"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "logsendflg",
+                                "attributes": {
+                                    "__type": "s32"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "logerrlevel",
+                                "attributes": {
+                                    "__type": "s32"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "evtidnosendflg",
+                                "attributes": {
+                                    "__type": "s32"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
+
 async function getFacilityObject() {
     return {
         "declaration": {
@@ -562,5 +639,5 @@ async function getPublicIP() {
 
 
 
-const initObjects = { getFacilityObject, getMessageObject, getPackageListObject, getKeepAliveResponseObject, getInitResponseObject, getPcbEventObject }
+const initObjects = { getFacilityObject, getMessageObject, getPackageListObject, getKeepAliveResponseObject, getInitResponseObject, getPcbEventObject, getEventLogObject }
 module.exports = initObjects
