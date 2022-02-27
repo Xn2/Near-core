@@ -1,33 +1,56 @@
 const router = require('express').Router()
-const { fromKbinXML, toKbinXML } = require('../libs/kbinxml.js')
-const { LZ77Compress, LZ77Decompress } = require('../libs/lz77.js')
-const arc4 = require('../libs/arc4')
-const fs = require('fs')
+const { decryptHTTP, encryptHTTP } = require('../libs/crypto.js')
+const objectFactory = require('../libs/objectFactory.js')
+const config = require("../../config.json")
 
-router.post('/testBinDec', (req, res) => {
-    const parsed = fromKbinXML(req.body)
-    res.send(parsed)
-});
+router.use(decryptHTTP)
 
-router.post('/testBinLZDec', (req, res) => {
-    const decompressed = Buffer.from(LZ77Decompress(req.body));
-    const parsed = fromKbinXML(decompressed)
-    res.send(parsed)
-});
+router.post("//KFC*/services/get", (req, res) => {
+    const initResponse = objectFactory.getInitResponseObject();
+    const ciphered = encryptHTTP(initResponse)
+    res.set('X-Eamuse-Info', ciphered.key)
+    res.set('X-Compress', "none");
+    res.send(ciphered.body);
+})
 
-router.post('/testBinEnc', (req, res) => {
-    const parsed = toKbinXML(req.rawBody)
-    res.send(parsed)
-});
+router.post("/core/KFC*/pcbtracker/alive", (req, res) => {
+    const initResponse = objectFactory.getKeepAliveResponseObject();
+    const ciphered = encryptHTTP(initResponse)
+    res.set('X-Eamuse-Info', ciphered.key)
+    res.set('X-Compress', "none");
+    res.send(ciphered.body);
+})
 
-router.post('/testBinLZEnc', (req, res) => {
-    const enc = Buffer.from(toKbinXML(req.rawBody))
-    const compressed = LZ77Compress(enc);
-    res.send(compressed)
-});
+router.post("/core/KFC*/package/list", (req, res) => {
+    const initResponse = objectFactory.getPackageListObject();
+    const ciphered = encryptHTTP(initResponse)
+    res.set('X-Eamuse-Info', ciphered.key)
+    res.set('X-Compress', "none");
+    res.send(ciphered.body);
+})
 
-router.post('/testBinARC4LZDec', (req, res) => {
-    res.send(req.contents);
-});
+router.post("/core/KFC*/message/get", (req, res) => {
+    const initResponse = objectFactory.getMessageObject();
+    const ciphered = encryptHTTP(initResponse)
+    res.set('X-Eamuse-Info', ciphered.key)
+    res.set('X-Compress', "none");
+    res.send(ciphered.body);
+})
+
+router.post("/core/KFC*/facility/get", async (req, res) => {
+    const initResponse = await objectFactory.getFacilityObject();
+    const ciphered = encryptHTTP(initResponse)
+    res.set('X-Eamuse-Info', ciphered.key)
+    res.set('X-Compress', "none");
+    res.send(ciphered.body);
+})
+
+router.post("/core/KFC*/pcbevent/put", async (req, res) => {
+    const initResponse = await objectFactory.getPcbEventObject();
+    const ciphered = encryptHTTP(initResponse)
+    res.set('X-Eamuse-Info', ciphered.key)
+    res.set('X-Compress', "none");
+    res.send(ciphered.body);
+})
 
 module.exports = router

@@ -1,20 +1,46 @@
 const { fromKbinXML, toKbinXML } = require('../libs/kbinxml.js')
 const { LZ77Compress, LZ77Decompress } = require('../libs/lz77.js')
+const convert = require('xml-js');
 const secretKey = require("../../config.json").eamuse_secretKey
 const md5 = require("md5");
 const rc4 = require("arc4");
 
 
 function decryptHTTP(req, res, next) {
-    const initialData = req.body
-    const arc4key = headerToKey(req.headers['x-amuse-info'])
-    console.log(arc4key)
-    const cipher = rc4('arc4', arc4key);
-    const deciphered = cipher.decodeBuffer(initialData);
-    const decompressed = Buffer.from(LZ77Decompress(deciphered))
-    const parsed = fromKbinXML(decompressed)
-    req.contents = parsed
+    let data = req.body
+    if(req.headers['x-eamuse-info']){
+        const arc4key = headerToKey(req.headers['x-eamuse-info'])
+        const cipher = rc4('arc4', arc4key);
+        data = cipher.decodeBuffer(data);
+    }
+    if(req.headers['x-compress'] !== "none"){data = Buffer.from(LZ77Decompress(data))}
+    const parsed = fromKbinXML(data)
+    console.log(parsed)
+    req.contents = convert.xml2js(parsed)
     next()
+}
+
+function encryptHTTP(data) {
+    data = convert.json2xml(data)
+    console.log(data)
+    const bin = Buffer.from(toKbinXML(data))
+    //const compressed = Buffer.from(LZ77Compress(bin));
+    const key = keyGen()
+    const arc4key = headerToKey(key)
+    const cipher = rc4('arc4', arc4key);
+    //const ciphered = cipher.encodeBuffer(compressed);
+    const ciphered = cipher.encodeBuffer(bin);
+    return {key, body : ciphered}
+}
+
+function keyGen() {
+    const alpha = "0123456789abcdef";
+    let key = "1-";
+    for (let i = 0; i < 13; i++) {
+        if (i == 8) { key += '-' }
+        else { key += alpha[Math.floor(Math.random()* alpha.length) ] }
+    }
+    return key
 }
 
 // Convert a hex string to a byte array
@@ -32,4 +58,4 @@ function headerToKey(eamuseHeader) {
     return arc4Key
 }
 
-module.exports = { decryptHTTP }
+module.exports = { decryptHTTP, encryptHTTP }
