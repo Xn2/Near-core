@@ -230,5 +230,68 @@ function getSV5CommonData() {
     }
     return obj
 };
-const functions = {getSV5CommonData}
+
+function getSV5InquireData(cardid) {
+    return {
+        "declaration": {
+            "attributes": {
+                "version": "1.0",
+                "encoding": "UTF-8"
+            }
+        },
+        "elements": [
+            {
+                "type": "element",
+                "name": "response",
+                "elements": [
+                    {
+                        "type": "element",
+                        "name": "cardmng",
+                        "attributes": {
+                            "binded": "1",
+                            "dataid": cardid,
+                            "ecflag": "1",
+                            "expired": "0",
+                            "newflag": "0",
+                            "refid": cardid,
+                            "status": "0"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}
+
+function getSV5AuthpassData(cardid, pass) {
+    let status
+    if (cardid === "012E48C23C96678E" && pass === "0000") { status = "0" }
+    else { status = "1" }
+    console.log(status)
+    return {
+        "declaration": {
+            "attributes": {
+                "version": "1.0",
+                "encoding": "UTF-8"
+            }
+        },
+        "elements": [
+            {
+                "type": "element",
+                "name": "response",
+                "elements": [
+                    {
+                        "type": "element",
+                        "name": "cardmng",
+                        "attributes": {
+                            "status": status
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}
+
+const functions = { getSV5CommonData, getSV5InquireData, getSV5AuthpassData }
 module.exports = functions

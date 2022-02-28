@@ -523,7 +523,7 @@ async function getFacilityObject() {
                                                 "elements": [
                                                     {
                                                         "type": "text",
-                                                        "text": config.baseURL
+                                                        "text": config.arcadeName
                                                     }
                                                 ]
                                             },
@@ -536,7 +536,7 @@ async function getFacilityObject() {
                                                 "elements": [
                                                     {
                                                         "type": "text",
-                                                        "text": config.baseURL
+                                                        "text": config.arcadeName
                                                     }
                                                 ]
                                             },
@@ -549,7 +549,7 @@ async function getFacilityObject() {
                                                 "elements": [
                                                     {
                                                         "type": "text",
-                                                        "text": config.baseURL
+                                                        "text": config.arcadeName
                                                     }
                                                 ]
                                             },
@@ -562,7 +562,7 @@ async function getFacilityObject() {
                                                 "elements": [
                                                     {
                                                         "type": "text",
-                                                        "text": config.baseURL
+                                                        "text": config.arcadeName
                                                     }
                                                 ]
                                             },
@@ -575,7 +575,7 @@ async function getFacilityObject() {
                                                 "elements": [
                                                     {
                                                         "type": "text",
-                                                        "text": config.baseURL
+                                                        "text": config.arcadeName
                                                     }
                                                 ]
                                             }
