@@ -1,6 +1,8 @@
 const router = require('express').Router()
 const { decryptHTTP, encryptHTTP } = require('../libs/crypto.js')
 const objectFactory = require('../libs/objectFactory.js')
+const sv5 = require('../games/sv5.js')
+const sv6 = require('../games/sv6.js')
 const config = require("../../config.json")
 
 router.use(decryptHTTP)
@@ -39,6 +41,9 @@ router.post('/core', async (req, res) => {
             break;
         case "eventlog.write":
             initResponse = objectFactory.getEventLogObject();
+            break;
+        case "game.sv6_common":
+            initResponse = sv6.getSV6CommonData();
             break;
         default:
             res.send(400);
@@ -105,5 +110,14 @@ router.post("/core/KFC*/eventlog/write", async (req, res) => {
     res.set('X-Compress', "none");
     res.send(ciphered.body);
 })
+
+router.post("/core/KFC*/game/sv5_common", async (req, res) => {
+    const initResponse = sv5.getSV5CommonData();
+    const ciphered = encryptHTTP(initResponse)
+    res.set('X-Eamuse-Info', ciphered.key)
+    res.set('X-Compress', "none");
+    res.send(ciphered.body);
+})
+
 
 module.exports = router
