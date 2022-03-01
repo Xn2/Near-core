@@ -21,6 +21,10 @@ module.exports = (sequelize, DataTypes) => sequelize.define('User', {
     type: DataTypes.INTEGER,
     allowNull : true,
   },
+  session : {
+    type: DataTypes.STRING,
+    allowNull : true,
+  },
   gameConfig : {
       type : DataTypes.JSON,
       allowNull : true

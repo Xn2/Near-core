@@ -289,10 +289,11 @@ async function getSV5InquireData(cardID) {
     }
 }
 
-async function getSV5AuthpassData(cardID, passCode) {
+async function getSV5AuthpassData(cardID, passCode, session) {
     let status = "0"
     let results = await db.User.findOne({ where: { cardID, passCode } })
     if (!results) status = "116";
+    await results.update({session})
     return {
         "declaration": {
             "attributes": {
@@ -316,6 +317,7 @@ async function getSV5AuthpassData(cardID, passCode) {
             }
         ]
     }
+    
 }
 
 const functions = { getSV5CommonData, getSV5InquireData, getSV5AuthpassData }
