@@ -266,8 +266,7 @@ function getSV5InquireData(cardid) {
 function getSV5AuthpassData(cardid, pass) {
     let status
     if (cardid === "012E48C23C96678E" && pass === "0000") { status = "0" }
-    else { status = "1" }
-    console.log(status)
+    else { status = "116" }
     return {
         "declaration": {
             "attributes": {

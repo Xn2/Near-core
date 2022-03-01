@@ -129,7 +129,6 @@ router.post("/core/KFC*/cardmng/inquire", async (req, res) => {
 
 router.post("/core/KFC*/cardmng/authpass", async (req, res) => {
     const initResponse = sv5.getSV5AuthpassData(req.contents.cardmng._attributes.refid, req.contents.cardmng._attributes.pass);
-    console.log(initResponse)
     const ciphered = encryptHTTP(initResponse)
     res.set('X-Eamuse-Info', ciphered.key)
     res.set('X-Compress', "none");
