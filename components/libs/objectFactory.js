@@ -1,9 +1,20 @@
-const { copyFile } = require('fs');
 const config = require('../../config.json');
 
 function getInitResponseObject() {
-    let services = ["ntp", "keepalive", "cardmng", "facility", "message", "numbering", "package", "pcbevent", "pcbtracker", "pkglist", "posevent", "userdata", "userid", "eacoin", "local", "local2", "lobby", "lobby2", "dlstatus", "netlog", "sidmgr", "globby"];
+    let services = ["apsmanager","cardmng","download","eacoin","exactly","facility","message","package","package2","pcbevent","pcbtracker","renewcert","posevent","pkglist","dlstatus","netlog","services","stuck","weblog","sidmgr","slocal","uploader","lobby","local","local2","player2","pcb2","shop2","info2"];
     let items = [];
+    items.push({
+        type: "element", name: "item", attributes: {
+            name: "keepalive",
+            url: "ping://127.0.0.1/core/keepalive?pa=127.0.0.1&amp;ia=127.0.0.1&amp;ga=127.0.0.1&amp;ma=127.0.0.1&amp;t1=2&amp;t2=15&amp;rt=2"
+        }
+    })
+    items.push({
+        type: "element", name: "item", attributes: {
+            name: "ntp",
+            url: "ntp://pool.ntp.org"
+        }
+    })
     for (i in services) {
         const service = services[i];
         items.push({
@@ -19,8 +30,8 @@ function getInitResponseObject() {
         name: "services",
         attributes: {
             expire: "10800",
-            method: "get",
             mode: "operation",
+            product_domain : "1",
             status: "0"
         },
         elements: items

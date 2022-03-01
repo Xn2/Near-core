@@ -24,6 +24,9 @@ router.post('/core', async (req, res) => {
         res.send(400); return
     }
     switch(req.query.f){
+        case "services.get" :
+            initResponse = objectFactory.getInitResponseObject();
+            break;
         case "pcbtracker.alive":
             initResponse = objectFactory.getKeepAliveResponseObject();
             break;
@@ -55,7 +58,7 @@ router.post('/core', async (req, res) => {
     res.send(ciphered.body);
 })
 
-router.post("//KFC*/services/get", (req, res) => {
+router.post("/core/KFC*/services/get", (req, res) => {
     const initResponse = objectFactory.getInitResponseObject();
     const ciphered = encryptHTTP(initResponse)
     res.set('X-Eamuse-Info', ciphered.key)
