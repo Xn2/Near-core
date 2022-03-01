@@ -1,5 +1,5 @@
 const { EVENT5, COURSES5, SDVX_AUTOMATION_SONGS, EXTENDS5 } = require('../../data/sv5data.js')
-
+const db = require('../sequelize.js')
 function getSV5CommonData() {
     let obj = {
         "declaration": {
@@ -231,7 +231,33 @@ function getSV5CommonData() {
     return obj
 };
 
-function getSV5InquireData(cardid) {
+async function getSV5InquireData(cardID) {
+    let results = await db.User.findOne({ where: { cardID } })
+    if (!results) {
+        return {
+            "declaration": {
+                "attributes": {
+                    "version": "1.0",
+                    "encoding": "UTF-8"
+                }
+            },
+            "elements": [
+                {
+                    "type": "element",
+                    "name": "response",
+                    "elements": [
+                        {
+                            "type": "element",
+                            "name": "cardmng",
+                            "attributes": {
+                                "status": "112"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
     return {
         "declaration": {
             "attributes": {
@@ -249,11 +275,11 @@ function getSV5InquireData(cardid) {
                         "name": "cardmng",
                         "attributes": {
                             "binded": "1",
-                            "dataid": cardid,
+                            "dataid": cardID,
                             "ecflag": "1",
                             "expired": "0",
                             "newflag": "0",
-                            "refid": cardid,
+                            "refid": cardID,
                             "status": "0"
                         }
                     }
@@ -263,10 +289,10 @@ function getSV5InquireData(cardid) {
     }
 }
 
-function getSV5AuthpassData(cardid, pass) {
-    let status
-    if (cardid === "012E48C23C96678E" && pass === "0000") { status = "0" }
-    else { status = "116" }
+async function getSV5AuthpassData(cardID, passCode) {
+    let status = "0"
+    let results = await db.User.findOne({ where: { cardID, passCode } })
+    if (!results) status = "116";
     return {
         "declaration": {
             "attributes": {

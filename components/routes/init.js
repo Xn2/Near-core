@@ -120,7 +120,7 @@ router.post("/core/KFC*/game/sv5_common", async (req, res) => {
 })
 
 router.post("/core/KFC*/cardmng/inquire", async (req, res) => {
-    const initResponse = sv5.getSV5InquireData(req.contents.cardmng._attributes.cardid);
+    const initResponse = await sv5.getSV5InquireData(req.contents.cardmng._attributes.cardid);
     const ciphered = encryptHTTP(initResponse)
     res.set('X-Eamuse-Info', ciphered.key)
     res.set('X-Compress', "none");
@@ -128,7 +128,7 @@ router.post("/core/KFC*/cardmng/inquire", async (req, res) => {
 })
 
 router.post("/core/KFC*/cardmng/authpass", async (req, res) => {
-    const initResponse = sv5.getSV5AuthpassData(req.contents.cardmng._attributes.refid, req.contents.cardmng._attributes.pass);
+    const initResponse = await sv5.getSV5AuthpassData(req.contents.cardmng._attributes.refid, req.contents.cardmng._attributes.pass);
     const ciphered = encryptHTTP(initResponse)
     res.set('X-Eamuse-Info', ciphered.key)
     res.set('X-Compress', "none");
