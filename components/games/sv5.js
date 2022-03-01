@@ -1,3 +1,4 @@
+const req = require('express/lib/request');
 const { EVENT5, COURSES5, SDVX_AUTOMATION_SONGS, EXTENDS5 } = require('../../data/sv5data.js')
 const db = require('../sequelize.js')
 function getSV5CommonData() {
@@ -291,9 +292,9 @@ async function getSV5InquireData(cardID) {
 
 async function getSV5AuthpassData(cardID, passCode, session) {
     let status = "0"
-    let results = await db.User.findOne({ where: { cardID, passCode } })
-    if (!results) status = "116";
-    await results.update({session})
+    let result = await db.User.findOne({ where: { cardID, passCode } })
+    if (!result) status = "116";
+    await result.update({session})
     return {
         "declaration": {
             "attributes": {
@@ -316,9 +317,82 @@ async function getSV5AuthpassData(cardID, passCode, session) {
                 ]
             }
         ]
-    }
-    
+    }   
 }
 
-const functions = { getSV5CommonData, getSV5InquireData, getSV5AuthpassData }
+async function createSV5PlayerAccount(cardID, passCode){
+    let result = await db.User.findOne({ where: { cardID } })
+    if (result) return false;
+    await db.User.create({cardID, passCode, isComplete : false})
+    return {
+        "declaration": {
+            "attributes": {
+                "version": "1.0",
+                "encoding": "ASCII"
+            }
+        },
+        "elements": [
+            {
+                "type": "element",
+                "name": "response",
+                "elements": [
+                    {
+                        "type": "element",
+                        "name": "cardmng",
+                        "attributes": {
+                            "dataid": cardID,
+                            "refid": cardID,
+                            "status": "0"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}
+
+async function completeSV5PlayerAccount(cardID, name, session){
+    let result = await db.User.findOne({ where: { cardID } })
+    if (!result || result.isComplete === false) return false;
+    await result.update({ name, passCode, skillLV : 0, apecaID : 0, session, gameProfile:{}, isComplete : true})
+    return {
+        "declaration": {
+            "attributes": {
+                "version": "1.0",
+                "encoding": "UTF-8"
+            }
+        },
+        "elements": [
+            {
+                "type": "element",
+                "name": "response",
+                "elements": [
+                    {
+                        "type": "element",
+                        "name": "game",
+                        "attributes": {
+                            "status": "0"
+                        },
+                        "elements": [
+                            {
+                                "type": "element",
+                                "name": "result",
+                                "attributes": {
+                                    "__type": "u8"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
+const functions = { getSV5CommonData, getSV5InquireData, getSV5AuthpassData, createSV5PlayerAccount, completeSV5PlayerAccount }
 module.exports = functions

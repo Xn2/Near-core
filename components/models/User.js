@@ -1,13 +1,12 @@
 module.exports = (sequelize, DataTypes) => sequelize.define('User', {
-  // Model attributes are defined here
   cardID: {
     type: DataTypes.STRING,
     allowNull: false,
-    primaryKey: true
+    primaryKey : true
   },
   ign: {
     type: DataTypes.STRING,
-    allowNull : false,
+    allowNull : true,
   },
   passCode: {
     type: DataTypes.INTEGER,
@@ -28,6 +27,10 @@ module.exports = (sequelize, DataTypes) => sequelize.define('User', {
   gameConfig : {
       type : DataTypes.JSON,
       allowNull : true
+  },
+  isComplete:{
+    type : DataTypes.BOOLEAN,
+    allowNull : false
   }
 }, {
   freezeTableName : true,

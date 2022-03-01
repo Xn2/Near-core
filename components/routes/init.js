@@ -130,8 +130,30 @@ router.post("/core/KFC*/cardmng/inquire", async (req, res) => {
     res.send(ciphered.body);
 })
 
+router.post("/core/KFC*/cardmng/getrefid", async (req, res) => {
+    let initResponse; 
+    if (typeof req.contents.cardmng._attributes.cardid !== "undefined"){
+        initResponse = await sv5.createSV5PlayerAccount(req.contents.cardmng._attributes.cardid, req.contents.cardmng._attributes.passwd);
+    }
+    else{
+        initResponse = await sv5.createSV5PlayerAccount(req.contents.cardmng._attributes.refid, req.contents.cardmng._attributes.passwd);
+    }
+    const ciphered = encryptHTTP(initResponse)
+    res.set('X-Eamuse-Info', ciphered.key)
+    res.set('X-Compress', "none");
+    res.send(ciphered.body);
+})
+
 router.post("/core/KFC*/cardmng/authpass", async (req, res) => {
     const initResponse = await sv5.getSV5AuthpassData(req.contents.cardmng._attributes.refid, req.contents.cardmng._attributes.pass, req.contents._attributes.tag);
+    const ciphered = encryptHTTP(initResponse)
+    res.set('X-Eamuse-Info', ciphered.key)
+    res.set('X-Compress', "none");
+    res.send(ciphered.body);
+})
+
+router.post("/core/KFC*/game/sv5_new", async (req, res) => {
+    const initResponse = await sv5.completeSV5PlayerAccount(req.contents.game.refid._text, req.contents.game.name._text, req.contents._attributes.tag);
     const ciphered = encryptHTTP(initResponse)
     res.set('X-Eamuse-Info', ciphered.key)
     res.set('X-Compress', "none");
