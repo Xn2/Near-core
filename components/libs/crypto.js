@@ -19,8 +19,9 @@ function decryptHTTP(req, res, next) {
     next()
 }
 
-function encryptHTTP(data) {
+function encryptHTTP(data, log=false) {
     data = convert.json2xml(data)
+    if (log) console.log(data)
     const bin = Buffer.from(toKbinXML(data))
     //const compressed = Buffer.from(LZ77Compress(bin));
     const key = keyGen()
