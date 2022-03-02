@@ -160,5 +160,12 @@ router.post("/core/KFC*/game/sv5_new", async (req, res) => {
     res.send(ciphered.body);
 })
 
+router.post("/core/KFC*/game/sv5_load", async (req, res) => {
+    const initResponse = await sv5.loadSV5PlayerAccount(req.contents.game.refid._text, req.contents._attributes.tag);
+    const ciphered = encryptHTTP(initResponse)
+    res.set('X-Eamuse-Info', ciphered.key)
+    res.set('X-Compress', "none");
+    res.send(ciphered.body);
+})
 
 module.exports = router

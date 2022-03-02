@@ -394,5 +394,548 @@ async function completeSV5PlayerAccount(cardID, name, session){
         ]
     }
 }
-const functions = { getSV5CommonData, getSV5InquireData, getSV5AuthpassData, createSV5PlayerAccount, completeSV5PlayerAccount }
+
+async function loadSV5PlayerAccount(cardID, name, session){
+    let result = await db.User.findOne({ where: { cardID, session } })
+    if (!result || result.isComplete === false) return false;
+    return {
+        "declaration": {
+            "attributes": {
+                "version": "1.0",
+                "encoding": "UTF-8"
+            }
+        },
+        "elements": [
+            {
+                "type": "element",
+                "name": "response",
+                "elements": [
+                    {
+                        "type": "element",
+                        "name": "game",
+                        "attributes": {
+                            "status": "0"
+                        },
+                        "elements": [
+                            {
+                                "type": "element",
+                                "name": "result",
+                                "attributes": {
+                                    "__type": "u8"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "name",
+                                "attributes": {
+                                    "__type": "str"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": result.name
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "code",
+                                "attributes": {
+                                    "__type": "str"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "4491-1822"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "sdvx_id",
+                                "attributes": {
+                                    "__type": "str"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "4491-1822"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "gamecoin_packet",
+                                "attributes": {
+                                    "__type": "u32"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "gamecoin_block",
+                                "attributes": {
+                                    "__type": "u32"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "appeal_id",
+                                "attributes": {
+                                    "__type": "u16"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "last_music_id",
+                                "attributes": {
+                                    "__type": "s32"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "last_music_type",
+                                "attributes": {
+                                    "__type": "u8"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "sort_type",
+                                "attributes": {
+                                    "__type": "u8"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "headphone",
+                                "attributes": {
+                                    "__type": "u8"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "blaster_energy",
+                                "attributes": {
+                                    "__type": "u32"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "blaster_count",
+                                "attributes": {
+                                    "__type": "u32"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "extrack_energy",
+                                "attributes": {
+                                    "__type": "u16"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "hispeed",
+                                "attributes": {
+                                    "__type": "s32"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "lanespeed",
+                                "attributes": {
+                                    "__type": "u32"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "gauge_option",
+                                "attributes": {
+                                    "__type": "u8"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "ars_option",
+                                "attributes": {
+                                    "__type": "u8"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "notes_option",
+                                "attributes": {
+                                    "__type": "u8"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "early_late_disp",
+                                "attributes": {
+                                    "__type": "u8"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "draw_adjust",
+                                "attributes": {
+                                    "__type": "s32"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "eff_c_left",
+                                "attributes": {
+                                    "__type": "u8"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "eff_c_right",
+                                "attributes": {
+                                    "__type": "u8"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "1"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "narrow_down",
+                                "attributes": {
+                                    "__type": "u8"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "kac_id",
+                                "attributes": {
+                                    "__type": "str"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "ABCD"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "skill_level",
+                                "attributes": {
+                                    "__type": "s16"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "skill_base_id",
+                                "attributes": {
+                                    "__type": "s16"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "skill_name_id",
+                                "attributes": {
+                                    "__type": "s16"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "ea_shop",
+                                "elements": [
+                                    {
+                                        "type": "element",
+                                        "name": "packet_booster",
+                                        "attributes": {
+                                            "__type": "s32"
+                                        },
+                                        "elements": [
+                                            {
+                                                "type": "text",
+                                                "text": "1"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "element",
+                                        "name": "blaster_pass_enable",
+                                        "attributes": {
+                                            "__type": "bool"
+                                        },
+                                        "elements": [
+                                            {
+                                                "type": "text",
+                                                "text": "1"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "element",
+                                        "name": "blaster_pass_limit_date",
+                                        "attributes": {
+                                            "__type": "u64"
+                                        },
+                                        "elements": [
+                                            {
+                                                "type": "text",
+                                                "text": "1646276738090"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "eaappli",
+                                "elements": [
+                                    {
+                                        "type": "element",
+                                        "name": "relation",
+                                        "attributes": {
+                                            "__type": "s8"
+                                        },
+                                        "elements": [
+                                            {
+                                                "type": "text",
+                                                "text": "1"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "cloud",
+                                "elements": [
+                                    {
+                                        "type": "element",
+                                        "name": "relation",
+                                        "attributes": {
+                                            "__type": "s8"
+                                        },
+                                        "elements": [
+                                            {
+                                                "type": "text",
+                                                "text": "1"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "block_no",
+                                "attributes": {
+                                    "__type": "s32"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "skill"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
+
+async function genSV5GameProfileObject(name){
+    const friendCode = genFriendCode();
+    return {
+        result : 0,
+        name,
+        code : friendCode,
+        sdvx_id : friendCode,
+        gamecoin_packet : 0,
+        gamecoin_block : 0,
+        appeal_id : 0,
+        last_music_id : 0,
+        last_music_type : 0,
+        sort_type : 0,
+        headphone,
+        blaster_energy,
+        blaster_count,
+        extrack_energy,
+        hispeed,
+        lanespeed,
+        gauge_option,
+        ars_option,
+        notes_option,
+        early_late_disp,
+        draw_adjust,
+        eff_c_left,
+        eff_c_right,
+        narrow_down,
+        kac_id : name,
+        skill_level,
+        skill_base_id,
+        skill_name_id,
+        ea_shop : {
+            packet_booster : 1,
+            blaster_pass_enable : 1,
+            blaster_pass_limit_date : 0
+        }
+    }
+}
+
+function genFriendCode(){
+    let code = ""
+    const alpha = "0123456789"
+    for (i in alpha){
+        code += alpha[Math.floor(Math.random()*alpha.length)]
+    }
+    return code
+}
+
+const functions = { getSV5CommonData, getSV5InquireData, getSV5AuthpassData, createSV5PlayerAccount, completeSV5PlayerAccount, loadSV5PlayerAccount }
 module.exports = functions
