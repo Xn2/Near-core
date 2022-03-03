@@ -48,6 +48,35 @@ router.post('/core', async (req, res) => {
         case "game.sv6_common":
             initResponse = sv6.getSV6CommonData();
             break;
+        case "cardmng.inquire":
+            initResponse = await sv6.getSV6InquireData(req.contents.cardmng._attributes.cardid);
+            break;
+        case "cardmng.authpass":
+            initResponse = await sv6.getSV6AuthpassData(req.contents.cardmng._attributes.refid, req.contents.cardmng._attributes.pass, req.contents._attributes.tag);
+            break; 
+        case "cardmng.getrefid":
+            if (typeof req.contents.cardmng._attributes.cardid !== "undefined"){
+                initResponse = await sv6.createSV6PlayerAccount(req.contents.cardmng._attributes.cardid, req.contents.cardmng._attributes.passwd);
+            }
+            else{
+                initResponse = await sv6.createSV6PlayerAccount(req.contents.cardmng._attributes.refid, req.contents.cardmng._attributes.passwd);
+            }
+            break;
+        case "game.sv6_new":
+            initResponse = await sv6.completeSV6PlayerAccount(req.contents.game.refid._text, req.contents.game.name._text, req.contents._attributes.tag);
+            break;
+        case "game.sv6_load":
+            initResponse = await sv6.loadSV6PlayerAccount(req.contents.game.refid._text, req.contents._attributes.tag);
+            break;
+        case "game.sv6_load_m":
+            initResponse = await sv6.getSV6LoadMData();
+            break;
+        case "game.sv6_frozen":
+            initResponse = await sv6.getSV6FrozenData();
+            break;
+        case "game.sv6_load_r":
+            initResponse = await sv6.getSV6RivalData();
+            break; 
         default:
             res.send(400);
             return;   
@@ -59,6 +88,14 @@ router.post('/core', async (req, res) => {
 })
 
 router.post("/core/KFC*/services/get", (req, res) => {
+    const initResponse = objectFactory.getInitResponseObject();
+    const ciphered = encryptHTTP(initResponse)
+    res.set('X-Eamuse-Info', ciphered.key)
+    res.set('X-Compress', "none");
+    res.send(ciphered.body);
+})
+
+router.post("//KFC*/services/get", (req, res) => {
     const initResponse = objectFactory.getInitResponseObject();
     const ciphered = encryptHTTP(initResponse)
     res.set('X-Eamuse-Info', ciphered.key)

@@ -323,7 +323,7 @@ async function getSV5AuthpassData(cardID, passCode, session) {
 async function createSV5PlayerAccount(cardID, passCode) {
     let result = await db.User.findOne({ where: { cardID } })
     if (result) return false;
-    const gameConfig = genSV5GameConfigObject("DUMMY")
+    const gameConfig = genSV5GameConfigObject("")
     console.log(gameConfig)
     try{
         await db.User.create({ cardID, passCode, isComplete: false, gameConfig})
