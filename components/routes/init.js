@@ -69,7 +69,7 @@ router.post('/core', async (req, res) => {
             initResponse = await sv6.loadSV6PlayerAccount(req.contents.game.refid._text, req.contents._attributes.tag);
             break;
         case "game.sv6_load_m":
-            initResponse = await sv6.getSV6LoadMData();
+            initResponse = await sv6.getSV6LoadMData(req.contents.game.refid._text);
             break;
         case "game.sv6_frozen":
             initResponse = await sv6.getSV6FrozenData();
@@ -77,6 +77,21 @@ router.post('/core', async (req, res) => {
         case "game.sv6_load_r":
             initResponse = await sv6.getSV6RivalData();
             break; 
+        case "game.sv6_save_m":
+            initResponse = await sv6.saveSV6Score(req.contents._attributes.tag, req.contents.game);
+            break;
+         case "game.sv6_save_e":
+            initResponse = await sv6.getSV6SaveEData();
+            break;
+        case "game.sv6_play_s":
+            initResponse = await sv6.getSV6PlaySData();
+            break;
+        case "game.sv6_lounge":
+            initResponse = await sv6.getSV6LoungeData();
+            break;
+        case "game.sv6_save":
+            initResponse = await sv6.saveSV6(req.contents._attributes.tag, req.contents.game.refid._text, req.contents.game);
+            break;
         default:
             res.send(400);
             return;   
