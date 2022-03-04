@@ -18,7 +18,7 @@
 
 As there is no proprer realease yet, you will have to clone from the `master` branch for now.
 
-You can install Near-code using this command in your termial.
+You can install Near-core using this command in your termial.
 
 `git clone https://github.com/Xn2/Near-core.git && cd Near-core && npm i`
 
