@@ -26,7 +26,7 @@ You can install Near-core using this command in your terminal.
 
 Use `node index.js` to start the server. It will create a new SQLite database automaticaly.
 
-Change the **Service URL** of Sound Voltex to `http://localhost:5773` and start the game.
+Change the **Service URL** of Sound Voltex to `http://localhost:5773/core` and start the game.
 
 Voilà!
 
