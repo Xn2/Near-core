@@ -401,7 +401,8 @@ function genSV6DefaultGameConfigObject(name) {
             "relation": "1"
         },
         "block_no": "0",
-        "skill": "0"
+        "skill": "0",
+        "play_count" : "0"
     }
     return obj
 }
@@ -1165,6 +1166,19 @@ async function loadSV6PlayerAccount(cardID, session) {
                             },
                             {
                                 "type": "element",
+                                "name": "play_count",
+                                "attributes": {
+                                    "__type": "u32"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": gameConfig.play_count
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
                                 "name": "ea_shop",
                                 "elements": [
                                     {
@@ -1429,10 +1443,12 @@ async function saveSV6(session, cardID, configContents) {
             "relation": "1"
         },
         "block_no": "0",
-        "skill": "0"
-    }
+        "skill": "0",
+        "play_count" : parseInt(user.gameConfig.play_count) + 1
+    } 
     const params = db.Param.findAll({ where: { cardID } })
     if (!params.length) {
+        console.log("params empty")
         for (entry of configContents.param.info) {
             console.log(entry)
             db.Param.create({ cardID, type: entry.type._text, paramID: entry.id._text, param: entry.param._text })
@@ -1442,6 +1458,7 @@ async function saveSV6(session, cardID, configContents) {
         for (const [key, value] of Object.entries(configContents.param)) {
             let exists = false
             for (currentParam of params) {
+                console.log(currentParam)
                 if (currentParam.type.toString() == value.info.type._text && currentParam.paramID.toString() == value.info.id._text) {
                     exists = true
                     if (currentParam.param !== value.info.param._text) {
