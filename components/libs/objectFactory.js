@@ -292,7 +292,7 @@ async function getFacilityObject() {
                                         "elements": [
                                             {
                                                 "type": "text",
-                                                "text": "Europe"
+                                                "text": "Near"
                                             }
                                         ]
                                     },
@@ -305,7 +305,7 @@ async function getFacilityObject() {
                                         "elements": [
                                             {
                                                 "type": "text",
-                                                "text": "Europe"
+                                                "text": "Near"
                                             }
                                         ]
                                     },
@@ -318,7 +318,7 @@ async function getFacilityObject() {
                                         "elements": [
                                             {
                                                 "type": "text",
-                                                "text": "Europe"
+                                                "text": "Near"
                                             }
                                         ]
                                     },
@@ -331,7 +331,7 @@ async function getFacilityObject() {
                                         "elements": [
                                             {
                                                 "type": "text",
-                                                "text": "Europe"
+                                                "text": "Near"
                                             }
                                         ]
                                     }

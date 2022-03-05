@@ -1,7 +1,6 @@
-const { param } = require('express/lib/request');
 const { EVENT6, COURSES6, SDVX_AUTOMATION_SONGS, EXTENDS6 } = require('../../data/sv6data.js');
-const User = require('../models/User.js');
 const db = require('../sequelize.js');
+const config = require('../../config.json')
 
 function getSV6CommonData() {
     let obj = {
@@ -402,7 +401,7 @@ function genSV6DefaultGameConfigObject(name) {
         },
         "block_no": "0",
         "skill": "0",
-        "play_count" : "0"
+        "play_count": "0"
     }
     return obj
 }
@@ -466,7 +465,6 @@ function unlockNavigators(items) {
             }
         ]
     });
-    console.log("Unlocking Navigators");
     return items;
 }
 
@@ -516,7 +514,6 @@ function unlockAppealCards(items) {
             }
         ]
     });
-    console.log("Unlocking Appeal Cards");
     return items;
 }
 
@@ -598,18 +595,22 @@ async function getSV6LoadMData(cardID) {
     for (score of scores) {
         preparedScores.push({
             "type": "element",
-            "name": "param",
-            "attributes": {
-                "__type": "u32",
-                "__count": "21"
-            },
-            "elements": [
-                {
-                    "type": "text",
-                    "text": getScoreString(score)
-                }
-            ]
-        })
+            "name": "info",
+            "elements": [{
+                "type": "element",
+                "name": "param",
+                "attributes": {
+                    "__type": "u32",
+                    "__count": "21"
+                },
+                "elements": [
+                    {
+                        "type": "text",
+                        "text": getScoreString(score)
+                    }
+                ]
+            }]
+        });
     }
     const obj = {
         "declaration": {
@@ -633,13 +634,7 @@ async function getSV6LoadMData(cardID) {
                             {
                                 "type": "element",
                                 "name": "music",
-                                "elements": [
-                                    {
-                                        "type": "element",
-                                        "name": "info",
-                                        "elements": preparedScores
-                                    }
-                                ]
+                                "elements": preparedScores
                             }
                         ]
                     }
@@ -779,8 +774,6 @@ async function loadSV6PlayerAccount(cardID, session) {
     let gameConfig = result.gameConfig
     items = unlockNavigators(items);
     items = unlockAppealCards(items);
-    console.log(items)
-    console.log(JSON.stringify(await getParams(cardID)))
     return {
         "declaration": {
             "attributes": {
@@ -1399,7 +1392,6 @@ async function saveSV6Score(session, scoreContents) {
 }
 
 async function saveSV6(session, cardID, configContents) {
-    console.log(session, cardID, configContents)
     const user = await db.User.findOne({ where: { cardID } })
     if (!user) return false;
     if (user.session !== session) return false;
@@ -1444,35 +1436,32 @@ async function saveSV6(session, cardID, configContents) {
         },
         "block_no": "0",
         "skill": "0",
-        "play_count" : parseInt(user.gameConfig.play_count) + 1
-    } 
-    const params = db.Param.findAll({ where: { cardID } })
+        "play_count": parseInt(user.gameConfig.play_count) + 1
+    }
+    const params = await db.Param.findAll({ where: { cardID } })
     if (!params.length) {
-        console.log("params empty")
         for (entry of configContents.param.info) {
-            console.log(entry)
             db.Param.create({ cardID, type: entry.type._text, paramID: entry.id._text, param: entry.param._text })
         }
     }
     else {
-        for (const [key, value] of Object.entries(configContents.param)) {
+        for (newParam of configContents.param.info) {
             let exists = false
             for (currentParam of params) {
-                console.log(currentParam)
-                if (currentParam.type.toString() == value.info.type._text && currentParam.paramID.toString() == value.info.id._text) {
+                if (currentParam.type.toString() == newParam.type._text && currentParam.paramID.toString() == newParam.id._text) {
                     exists = true
-                    if (currentParam.param !== value.info.param._text) {
-                        await currentParam.update({ param: value.info.param._text })
+                    if (currentParam.param !== newParam.param._text) {
+                        await currentParam.update({ param: newParam.param._text })
                     }
                 }
             }
             if (!exists) {
-                db.Param.create({ type: value.info.type._text, paramID: value.info.id._text, param: value.info.param._text })
+                db.Param.create({ type: newParam.type._text, paramID: newParam.id._text, param: newParam.param._text })
             }
         }
     }
     try {
-        await user.update({ gameConfig: newConfig, apecaID: configContents.appeal_id._text, skillLV: configContents.skill_level._text, session: null })
+        await user.update({ gameConfig: newConfig, apecaID: configContents.appeal_id._text, skillLV: configContents.skill_level._text })
         return {
             "declaration": {
                 "attributes": {
@@ -1503,5 +1492,226 @@ async function saveSV6(session, cardID, configContents) {
     }
 }
 
-const functions = { getSV6CommonData, getSV6InquireData, getSV6AuthpassData, createSV6PlayerAccount, completeSV6PlayerAccount, loadSV6PlayerAccount, getSV6RivalData, getSV6LoadMData, getSV6FrozenData, saveSV6Score, saveSV6, getSV6PlaySData, getSV6LoungeData, getSV6SaveEData }
+async function getSV6PaseliCheckinData(cardID, passCode) {
+    const user = await db.User.findOne({ where: { cardID, passCode } });
+    if (!user) return false;
+    return {
+        "declaration": {
+            "attributes": {
+                "version": "1.0",
+                "encoding": "UTF-8"
+            }
+        },
+        "elements": [
+            {
+                "type": "element",
+                "name": "response",
+                "elements": [
+                    {
+                        "type": "element",
+                        "name": "eacoin",
+                        "elements": [
+                            {
+                                "type": "element",
+                                "name": "balance",
+                                "attributes": {
+                                    "__type": "s32"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "573"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "sessid",
+                                "attributes": {
+                                    "__type": "str"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "X"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "acstatus",
+                                "attributes": {
+                                    "__type": "u8"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "1"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "sequence",
+                                "attributes": {
+                                    "__type": "s16"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "1"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "acid",
+                                "attributes": {
+                                    "__type": "str"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "X"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "acname",
+                                "attributes": {
+                                    "__type": "str"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "X"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
+
+function getSV6PaseliConsumeData() {
+    return {
+        "declaration": {
+            "attributes": {
+                "version": "1.0",
+                "encoding": "SHIFT_JIS"
+            }
+        },
+        "elements": [
+            {
+                "type": "element",
+                "name": "response",
+                "elements": [
+                    {
+                        "type": "element",
+                        "name": "eacoin",
+                        "attributes": {
+                            "status": "0"
+                        },
+                        "elements": [
+                            {
+                                "type": "element",
+                                "name": "autocharge",
+                                "attributes": {
+                                    "__type": "u8"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "acstatus",
+                                "attributes": {
+                                    "__type": "u8"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "0"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "balance",
+                                "attributes": {
+                                    "__type": "s32"
+                                },
+                                "elements": [
+                                    {
+                                        "type": "text",
+                                        "text": "573"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
+
+function getSV6PaseliCheckoutData() {
+    return {
+        "declaration": {
+            "attributes": {
+                "version": "1.0",
+                "encoding": "SHIFT_JIS"
+            }
+        },
+        "elements": [
+            {
+                "type": "element",
+                "name": "response",
+                "elements": [
+                    {
+                        "type": "element",
+                        "name": "eacoin",
+                        "attributes": {
+                            "status": "0"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}
+
+function getSV6ShopData() {
+    return {
+        "declaration": {
+            "attributes": {
+                "version": "1.0",
+                "encoding": "UTF-8"
+            }
+        },
+        "elements": [
+            {
+                "type": "element",
+                "name": "response",
+                "elements": [
+                    {
+                        "type": "element",
+                        "name": "game",
+                    }
+                ]
+            }
+        ]
+    }
+}
+
+const functions = { getSV6CommonData, getSV6InquireData, getSV6AuthpassData, createSV6PlayerAccount, completeSV6PlayerAccount, loadSV6PlayerAccount, getSV6RivalData, getSV6LoadMData, getSV6FrozenData, saveSV6Score, saveSV6, getSV6PlaySData, getSV6LoungeData, getSV6SaveEData, getSV6PaseliCheckinData, getSV6PaseliConsumeData, getSV6PaseliCheckoutData, getSV6ShopData }
 module.exports = functions

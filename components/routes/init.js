@@ -20,6 +20,9 @@ router.post('/', (req, res) => {
 
 router.post('/core', async (req, res) => {
     let initResponse;
+    let log = false
+    let compress = false
+    let encrypt = true
     if (req.query.model.substring(0,3) !== "KFC"){
         res.send(400); return
     }
@@ -47,6 +50,10 @@ router.post('/core', async (req, res) => {
             break;
         case "game.sv6_common":
             initResponse = sv6.getSV6CommonData();
+            compress = true
+            break;
+        case "game.sv6_shop":
+            initResponse = sv6.getSV6ShopData();
             break;
         case "cardmng.inquire":
             initResponse = await sv6.getSV6InquireData(req.contents.cardmng._attributes.cardid);
@@ -62,6 +69,18 @@ router.post('/core', async (req, res) => {
                 initResponse = await sv6.createSV6PlayerAccount(req.contents.cardmng._attributes.refid, req.contents.cardmng._attributes.passwd);
             }
             break;
+        case "eacoin.checkin":
+            encrypt = false
+            initResponse = await sv6.getSV6PaseliCheckinData(req.contents.eacoin.cardid._text, req.contents.eacoin.passwd._text);
+            break;
+        case "eacoin.consume":
+            encrypt = false
+            initResponse = sv6.getSV6PaseliConsumeData();
+            break;
+        case "eacoin.checkout":
+            encrypt = false
+            initResponse = sv6.getSV6PaseliCheckoutData();
+            break;     
         case "game.sv6_new":
             initResponse = await sv6.completeSV6PlayerAccount(req.contents.game.refid._text, req.contents.game.name._text, req.contents._attributes.tag);
             break;
@@ -96,9 +115,10 @@ router.post('/core', async (req, res) => {
             res.send(400);
             return;   
     }
-    const ciphered = encryptHTTP(initResponse)
-    res.set('X-Eamuse-Info', ciphered.key)
+    const ciphered = encryptHTTP(initResponse, log, compress, encrypt)
+    if (ciphered.key !== null) res.set('X-Eamuse-Info', ciphered.key)
     res.set('X-Compress', "none");
+    if (compress) res.set('X-Compress', "lz77");
     res.send(ciphered.body);
 })
 

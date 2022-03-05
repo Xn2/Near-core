@@ -19,17 +19,21 @@ function decryptHTTP(req, res, next) {
     next()
 }
 
-function encryptHTTP(data, log=false) {
+function encryptHTTP(data, log=false, compress, encrypt) {
     data = convert.json2xml(data)
+    key = null
     if (log) console.log(data)
-    const bin = Buffer.from(toKbinXML(data))
-    //const compressed = Buffer.from(LZ77Compress(bin));
-    const key = keyGen()
-    const arc4key = headerToKey(key)
-    const cipher = rc4('arc4', arc4key);
-    //const ciphered = cipher.encodeBuffer(compressed);
-    const ciphered = cipher.encodeBuffer(bin);
-    return {key, body : ciphered}
+    data = Buffer.from(toKbinXML(data))
+    if (compress){
+        data = Buffer.from(LZ77Compress(data));
+    }
+    if (encrypt){
+        key = keyGen()
+        const arc4key = headerToKey(key)
+        const cipher = rc4('arc4', arc4key);
+        data = cipher.encodeBuffer(data);
+    }
+    return {key, body : data}
 }
 
 function keyGen() {
