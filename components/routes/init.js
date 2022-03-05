@@ -9,7 +9,7 @@ router.use(decryptHTTP)
 
 router.post('/', (req, res) => {
     if (req.query.model.substring(0,3) !== "KFC" && req.query.f !== "services.get"){
-        res.send(400); return
+        res.sendStatus(400); return
     } 
     const initResponse = objectFactory.getInitResponseObject();
     const ciphered = encryptHTTP(initResponse)
@@ -24,7 +24,7 @@ router.post('/core', async (req, res) => {
     let compress = false
     let encrypt = true
     if (req.query.model.substring(0,3) !== "KFC"){
-        res.send(400); return
+        res.sendStatus(400); return
     }
     switch(req.query.f){
         case "services.get" :
@@ -115,7 +115,7 @@ router.post('/core', async (req, res) => {
             initResponse = await sv6.saveSV6(req.contents._attributes.tag, req.contents.game.refid._text, req.contents.game);
             break;
         default:
-            res.send(400);
+            res.sendStatus(400);
             return;   
     }
     if (!initResponse) {res.sendStatus(403); return;}
