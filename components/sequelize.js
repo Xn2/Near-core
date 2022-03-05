@@ -1,9 +1,11 @@
 const { Sequelize, DataTypes } = require('@sequelize/core');
 const fs = require("fs")
 const path = require("path")
+const config = require('../config.json')
 const sequelize = new Sequelize({
     dialect: 'sqlite',
-    storage: './db/db.sqlite'
+    storage: './db/db.sqlite',
+    logging: config.sequelize_debug
 });
 
 let db = {};
@@ -11,7 +13,7 @@ let db = {};
 async function testDBConnection(){
     try {
         await sequelize.authenticate();
-        console.log('Connection has been established successfully.');
+        console.log('Connected to the database.');
     } catch (error) {
         console.error('Unable to connect to the database:', error);
     }
@@ -28,7 +30,7 @@ testDBConnection()
 sequelize.sync({
     alter: true
 }).then(async () => {
-    console.log('Models Synchronized.');
+    console.log('Database synchronization complete.');
 }).catch(err => console.log(err));
 
 

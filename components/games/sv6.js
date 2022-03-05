@@ -1255,6 +1255,11 @@ async function loadSV6PlayerAccount(cardID, session) {
                             },
                             {
                                 "type": "element",
+                                "name": "skill",
+                                "elements": await getSkillAnalyzerCourses(cardID)
+                            },
+                            {
+                                "type": "element",
                                 "name": "item",
                                 "elements": items
                             },
@@ -1713,5 +1718,223 @@ function getSV6ShopData() {
     }
 }
 
-const functions = { getSV6CommonData, getSV6InquireData, getSV6AuthpassData, createSV6PlayerAccount, completeSV6PlayerAccount, loadSV6PlayerAccount, getSV6RivalData, getSV6LoadMData, getSV6FrozenData, saveSV6Score, saveSV6, getSV6PlaySData, getSV6LoungeData, getSV6SaveEData, getSV6PaseliCheckinData, getSV6PaseliConsumeData, getSV6PaseliCheckoutData, getSV6ShopData }
+async function SaveSV6SkillData(session, skillContents) {
+    const user = await db.User.findOne({ where: { session, cardID: skillContents.refid._text } })
+    if (!user) return false;
+    const alreadyDone = await db.Skill.findOne({ where: { cardID: skillContents.refid._text, ssnid: skillContents.ssnid._text, crsid: skillContents.crsid._text } })
+    let trackIDs = []
+    for (track of skillContents.tr) {
+        trackIDs.push(await SaveSV6SkillTrackData(skillContents.refid._text, track))
+    }
+    if (!alreadyDone) {
+        await db.Skill.create({
+            cardID: skillContents.refid._text,
+            playID: skillContents.play_id._text,
+            ssnid: skillContents.ssnid._text,
+            crsid: skillContents.crsid._text,
+            sc: skillContents.sc._text,
+            ex: skillContents.ex._text,
+            ct: skillContents.ct._text,
+            gr: skillContents.gr._text,
+            jr: skillContents.jr._text,
+            cr: skillContents.cr._text,
+            nr: skillContents.nr._text,
+            er: skillContents.er._text,
+            cm: skillContents.cm._text,
+            ar: skillContents.ar._text,
+            cnt: "1",
+            locid: skillContents.locid._text,
+            tr1: trackIDs[0],
+            tr2: trackIDs[1],
+            tr3: trackIDs[2]
+        })
+    }
+    else if (typeof "alreadyDone.sc" !== "undefined" && parseInt(skillContents.sc._text) > alreadyDone.sc) {
+        await alreadyDone.update({
+            sc: skillContents.sc._text,
+            ex: skillContents.ex._text,
+            ct: skillContents.ct._text,
+            gr: skillContents.gr._text,
+            jr: skillContents.jr._text,
+            cr: skillContents.cr._text,
+            nr: skillContents.nr._text,
+            er: skillContents.er._text,
+            cm: skillContents.cm._text,
+            ar: skillContents.ar._text,
+            cnt: parseInt(alreadyDone.cnt) + 1,
+            locid: skillContents.locid._text,
+            tr1: trackIDs[0],
+            tr2: trackIDs[1],
+            tr3: trackIDs[2]
+        })
+    }
+    else if (typeof "alreadyDone.sc" !== "undefined") {
+        await alreadyDone.update({
+            cnt: parseInt(alreadyDone.cnt) + 1,
+        })
+    }
+    return {
+        "declaration": {
+            "attributes": {
+                "version": "1.0",
+                "encoding": "UTF-8"
+            }
+        },
+        "elements": [
+            {
+                "type": "element",
+                "name": "response",
+                "elements": [
+                    {
+                        "type": "element",
+                        "name": "game",
+                        "attributes": {
+                            "status": "0"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}
+
+async function SaveSV6SkillTrackData(cardID, track) {
+    const result = await db.SkillTrack.create({
+        cardID,
+        st: track.st._text,
+        sc: track.sc._text,
+        ex: track.ex._text,
+        ct: track.ct._text,
+        gr: track.gr._text,
+        jr: track.jr._text,
+        cr: track.cr._text,
+        nr: track.nr._text,
+        er: track.er._text,
+        pr: track.pr._text
+    })
+    return result.id
+}
+
+
+async function getSkillAnalyzerCourses(cardID) {
+    const final = []
+    const courses = await db.Skill.findAll({ where: { cardID } });
+    if (!courses) return [];
+    for (course of courses) {
+        final.push(
+            {
+                "type": "element",
+                "name": "course",
+                "elements": [
+                    {
+                        "type": "element",
+                        "name": "ssnid",
+                        "attributes": {
+                            "__type": "s16"
+                        },
+                        "elements": [
+                            {
+                                "type": "text",
+                                "text": course.ssnid.toString()
+                            }
+                        ]
+                    },
+                    {
+                        "type": "element",
+                        "name": "crsid",
+                        "attributes": {
+                            "__type": "s16"
+                        },
+                        "elements": [
+                            {
+                                "type": "text",
+                                "text": course.crsid.toString()
+                            }
+                        ]
+                    },
+                    {
+                        "type": "element",
+                        "name": "sc",
+                        "attributes": {
+                            "__type": "s32"
+                        },
+                        "elements": [
+                            {
+                                "type": "text",
+                                "text": course.sc.toString()
+                            }
+                        ]
+                    },
+                    {
+                        "type": "element",
+                        "name": "ex",
+                        "attributes": {
+                            "__type": "s32"
+                        },
+                        "elements": [
+                            {
+                                "type": "text",
+                                "text": course.ex.toString()
+                            }
+                        ]
+                    },
+                    {
+                        "type": "element",
+                        "name": "ct",
+                        "attributes": {
+                            "__type": "s16"
+                        },
+                        "elements": [
+                            {
+                                "type": "text",
+                                "text": course.ct.toString()
+                            }
+                        ]
+                    },
+                    {
+                        "type": "element",
+                        "name": "gr",
+                        "attributes": {
+                            "__type": "s16"
+                        },
+                        "elements": [
+                            {
+                                "type": "text",
+                                "text": course.gr.toString()
+                            }
+                        ]
+                    },
+                    {
+                        "type": "element",
+                        "name": "ar",
+                        "attributes": {
+                            "__type": "s16"
+                        },
+                        "elements": [
+                            {
+                                "type": "text",
+                                "text": course.ar.toString()
+                            }
+                        ]
+                    },
+                    {
+                        "type": "element",
+                        "name": "cnt",
+                        "attributes": {
+                            "__type": "s16"
+                        },
+                        "elements": [
+                            {
+                                "type": "text",
+                                "text": course.cnt.toString()
+                            }
+                        ]
+                    }
+                ]
+            })
+        }
+    return final
+}
+
+const functions = { getSV6CommonData, getSV6InquireData, getSV6AuthpassData, createSV6PlayerAccount, completeSV6PlayerAccount, loadSV6PlayerAccount, getSV6RivalData, getSV6LoadMData, getSV6FrozenData, saveSV6Score, saveSV6, getSV6PlaySData, getSV6LoungeData, getSV6SaveEData, getSV6PaseliCheckinData, getSV6PaseliConsumeData, getSV6PaseliCheckoutData, getSV6ShopData, SaveSV6SkillData }
 module.exports = functions

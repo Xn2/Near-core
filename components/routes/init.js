@@ -99,8 +99,11 @@ router.post('/core', async (req, res) => {
         case "game.sv6_save_m":
             initResponse = await sv6.saveSV6Score(req.contents._attributes.tag, req.contents.game);
             break;
-         case "game.sv6_save_e":
+        case "game.sv6_save_e":
             initResponse = await sv6.getSV6SaveEData();
+            break;
+        case "game.sv6_save_c":
+            initResponse = await sv6.SaveSV6SkillData(req.contents._attributes.tag, req.contents.game);
             break;
         case "game.sv6_play_s":
             initResponse = await sv6.getSV6PlaySData();
@@ -115,6 +118,7 @@ router.post('/core', async (req, res) => {
             res.send(400);
             return;   
     }
+    if (!initResponse) {res.sendStatus(403); return;}
     const ciphered = encryptHTTP(initResponse, log, compress, encrypt)
     if (ciphered.key !== null) res.set('X-Eamuse-Info', ciphered.key)
     res.set('X-Compress', "none");
