@@ -815,7 +815,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "text",
-                                        "text": gameConfig.name
+                                        "text": gameConfig.name.toString()
                                     }
                                 ]
                             },
@@ -828,7 +828,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "text",
-                                        "text": gameConfig.code
+                                        "text": gameConfig.code.toString()
                                     }
                                 ]
                             },
@@ -841,7 +841,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "text",
-                                        "text": gameConfig.code
+                                        "text": gameConfig.code.toString()
                                     }
                                 ]
                             },
@@ -854,7 +854,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "text",
-                                        "text": gameConfig.gamecoin_packet
+                                        "text": gameConfig.gamecoin_packet.toString()
                                     }
                                 ]
                             },
@@ -867,7 +867,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "text",
-                                        "text": gameConfig.gamecoin_block
+                                        "text": gameConfig.gamecoin_block.toString()
                                     }
                                 ]
                             },
@@ -880,7 +880,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "text",
-                                        "text": gameConfig.appeal_id
+                                        "text": gameConfig.appeal_id.toString()
                                     }
                                 ]
                             },
@@ -893,7 +893,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "text",
-                                        "text": gameConfig.last_music_id
+                                        "text": gameConfig.last_music_id.toString()
                                     }
                                 ]
                             },
@@ -906,7 +906,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "text",
-                                        "text": gameConfig.last_music_type
+                                        "text": gameConfig.last_music_type.toString()
                                     }
                                 ]
                             },
@@ -919,7 +919,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "text",
-                                        "text": gameConfig.sort_type
+                                        "text": gameConfig.sort_type.toString()
                                     }
                                 ]
                             },
@@ -932,7 +932,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "text",
-                                        "text": gameConfig.headphone
+                                        "text": gameConfig.headphone.toString()
                                     }
                                 ]
                             },
@@ -945,7 +945,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "text",
-                                        "text": gameConfig.blaster_energy
+                                        "text": gameConfig.blaster_energy.toString()
                                     }
                                 ]
                             },
@@ -958,7 +958,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "text",
-                                        "text": gameConfig.blaster_count
+                                        "text": gameConfig.blaster_count.toString()
                                     }
                                 ]
                             },
@@ -971,7 +971,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "text",
-                                        "text": gameConfig.extrack_energy
+                                        "text": gameConfig.extrack_energy.toString()
                                     }
                                 ]
                             },
@@ -984,7 +984,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "text",
-                                        "text": gameConfig.hispeed
+                                        "text": gameConfig.hispeed.toString()
                                     }
                                 ]
                             },
@@ -997,7 +997,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "text",
-                                        "text": gameConfig.lanespeed
+                                        "text": gameConfig.lanespeed.toString()
                                     }
                                 ]
                             },
@@ -1010,7 +1010,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "text",
-                                        "text": gameConfig.gauge_option
+                                        "text": gameConfig.gauge_option.toString()
                                     }
                                 ]
                             },
@@ -1023,7 +1023,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "text",
-                                        "text": gameConfig.ars_option
+                                        "text": gameConfig.ars_option.toString()
                                     }
                                 ]
                             },
@@ -1036,7 +1036,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "text",
-                                        "text": gameConfig.notes_option
+                                        "text": gameConfig.notes_option.toString()
                                     }
                                 ]
                             },
@@ -1049,7 +1049,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "text",
-                                        "text": gameConfig.early_late_disp
+                                        "text": gameConfig.early_late_disp.toString()
                                     }
                                 ]
                             },
@@ -1062,7 +1062,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "text",
-                                        "text": gameConfig.draw_adjust
+                                        "text": gameConfig.draw_adjust.toString()
                                     }
                                 ]
                             },
@@ -1075,7 +1075,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "text",
-                                        "text": gameConfig.eff_c_left
+                                        "text": gameConfig.eff_c_left.toString()
                                     }
                                 ]
                             },
@@ -1088,7 +1088,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "text",
-                                        "text": gameConfig.eff_c_right
+                                        "text": gameConfig.eff_c_right.toString()
                                     }
                                 ]
                             },
@@ -1101,7 +1101,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "text",
-                                        "text": gameConfig.narrow_down
+                                        "text": gameConfig.narrow_down.toString()
                                     }
                                 ]
                             },
@@ -1114,7 +1114,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "text",
-                                        "text": gameConfig.name
+                                        "text": gameConfig.name.toString()
                                     }
                                 ]
                             },
@@ -1127,7 +1127,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "text",
-                                        "text": gameConfig.skill_level
+                                        "text": gameConfig.skill_level.toString()
                                     }
                                 ]
                             },
@@ -1140,7 +1140,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "text",
-                                        "text": gameConfig.skill_base_id
+                                        "text": gameConfig.skill_base_id.toString()
                                     }
                                 ]
                             },
@@ -1153,7 +1153,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "text",
-                                        "text": gameConfig.skill_name_id
+                                        "text": gameConfig.skill_name_id.toString()
                                     }
                                 ]
                             },
@@ -1166,7 +1166,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "text",
-                                        "text": gameConfig.play_count
+                                        "text": gameConfig.play_count.toString()
                                     }
                                 ]
                             },
@@ -1402,8 +1402,8 @@ async function saveSV6(session, cardID, configContents) {
     if (user.session !== session) return false;
     const newConfig = {
         "name": user.ign,
-        "code": user.gameConfig.friendCode,
-        "sdvx_id": user.gameConfig.friendCode,
+        "code": user.gameConfig.code,
+        "sdvx_id": user.gameConfig.code,
         "appeal_id": configContents.appeal_id._text,
         "gamecoin_packet": parseInt(user.gameConfig.gamecoin_packet) + parseInt(configContents.earned_gamecoin_packet._text),
         "gamecoin_block": parseInt(user.gameConfig.gamecoin_block) + parseInt(configContents.earned_gamecoin_block._text),
