@@ -83,6 +83,17 @@ router.post('/api/me/removeRival', async (req, res) => {
     res.send(`Removed ${rival.ign} as a rival.`)
 })
 
+router.get('/api/me/getRivals', async (req, res) => {
+    if (!req.user) { res.sendStatus(403); return; }
+    const user = await db.User.findOne({where : {cardID : req.user.cardID}});
+    let rivals = user.rivals
+    let sanitized = []
+    for (rival of rivals){
+        sanitized.push({name : rival.name, friendCode : rival.friendCode})
+    }
+    res.send(sanitized)
+})
+
 router.get('/api/me/scores', async (req, res) => {
     if (!req.user) { res.sendStatus(403); return; }
     const scores = await db.Score.findAll({ where: { cardID: req.user.cardID } })
@@ -113,7 +124,7 @@ router.post('/api/me/tachiExport', async (req, res) => {
 
 router.get('/api/me/profile', async (req, res) => {
     if (!req.user) { res.sendStatus(403); return; }
-    const user = await db.User.findOne({ where: { cardID: req.user.cardID }, attributes: { exclude: ['passCode', 'session'] } })
+    const user = await db.User.findOne({ where: { cardID: req.user.cardID }, attributes: { exclude: ['passCode', 'session', 'rivals'] } })
     res.send(user)
 })
 
