@@ -10,6 +10,7 @@ app.use(xmlparser());
 app.use(express.raw())
 app.use(express.json());
 app.use(session({ secret : genSessionSecret(), resave: true, saveUninitialized:true}))
+app.use("/web", express.static('./components/front/public'));
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(router)

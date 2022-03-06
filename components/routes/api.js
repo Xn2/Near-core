@@ -3,10 +3,6 @@ const db = require('../sequelize')
 const passport = require('../passport.js')
 const musicDB = require('../../data/music_db.json').mdb.music;
 
-router.get('/web', (req, res) => {
-    res.send("OK")
-})
-
 router.post('/api/signup', passport.authenticate('signup', {
     successRedirect: '/dashboard',
     failureRedirect: '/nok'
