@@ -7,6 +7,9 @@ const rc4 = require("arc4");
 
 
 function decryptHTTP(req, res, next) {
+    if (req.headers['user-agent'] !== "EAMUSE.XRPC/1.0"){
+        res.redirect('/web'); return
+    }
     let data = req.body
     if(req.headers['x-eamuse-info']){
         const arc4key = headerToKey(req.headers['x-eamuse-info'])

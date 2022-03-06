@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => sequelize.define('User', {
     type: DataTypes.INTEGER,
     allowNull : false,
   },
+  friendCode: {
+    type : DataTypes.STRING,
+    allowNull : false
+  },
   skillLV: {
     type: DataTypes.INTEGER,
     allowNull : true,
@@ -28,9 +32,18 @@ module.exports = (sequelize, DataTypes) => sequelize.define('User', {
       type : DataTypes.JSON,
       allowNull : true
   },
+  rivals : {
+    type : DataTypes.JSON,
+    allowNull : true
+  },
   isComplete:{
     type : DataTypes.BOOLEAN,
     allowNull : false
+  },
+  isClaimed:{
+    type : DataTypes.BOOLEAN,
+    allowNull : false,
+    defaultValue : false
   }
 }, {
   freezeTableName : true,

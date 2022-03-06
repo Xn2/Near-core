@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "E-Amusement server core",
   "main": "index.js",
-  "bin" : "index.js",
+  "bin": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,9 +14,15 @@
     "@sequelize/core": "^7.0.0-alpha.10",
     "arc4": "^3.4.0",
     "axios": "^0.26.0",
+    "bcrypt": "^5.0.1",
     "express": "^4.17.3",
+    "express-session": "^1.17.2",
     "express-xml-bodyparser": "^0.3.0",
+    "i": "^0.3.7",
     "md5": "^2.3.0",
+    "npm": "^8.5.3",
+    "passport": "^0.5.2",
+    "passport-local": "^1.0.0",
     "sequelize": "^6.17.0",
     "sqlite3": "^5.0.2",
     "xml-js": "^1.6.11"

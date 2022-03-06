@@ -326,7 +326,7 @@ async function createSV6PlayerAccount(cardID, passCode) {
     if (result) return false;
     const gameConfig = genSV6DefaultGameConfigObject("")
     try {
-        await db.User.create({ cardID, passCode, isComplete: false, gameConfig })
+        await db.User.create({ cardID, passCode, isComplete: false, gameConfig, isClaimed : false, friendCode : gameConfig.code, rivals : [] })
     }
     catch (e) {
         console.log(e)
