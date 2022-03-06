@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => sequelize.define('Score', {
     },
     maxChain: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
     },
     just: {
         type: DataTypes.INTEGER,
@@ -41,19 +41,19 @@ module.exports = (sequelize, DataTypes) => sequelize.define('Score', {
     },
     critical: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
     },
     near: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
     },
     error: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
     },
     effectiveRate: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
     },
     btnRate: {
         type: DataTypes.INTEGER,
@@ -69,35 +69,35 @@ module.exports = (sequelize, DataTypes) => sequelize.define('Score', {
     },
     mode: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
     },
     gaugeType: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
     },
     notesOption: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
     },
     onlineNum: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
     },
     localNum: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
     },
     challengeType: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
     },
     retryCnt: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
     },
     judge: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     dropFrame: {
         type: DataTypes.INTEGER,
@@ -117,11 +117,11 @@ module.exports = (sequelize, DataTypes) => sequelize.define('Score', {
     },
     mixID: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
     },
     mixLike: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
     },
 }, {
     freezeTableName: true,
