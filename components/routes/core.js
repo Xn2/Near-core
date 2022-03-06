@@ -10,7 +10,7 @@ router.use(decryptHTTP)
 router.post('/', async (req, res) => {
     console.log(req.headers['user-agent'])
     if (req.headers['user-agent'] !== "EAMUSE.XRPC/1.0"){
-        return
+        res.redirect("/web/login.html"); return;
     }
     if (req.query.model.substring(0,3) !== "KFC" && req.query.f !== "services.get"){
         res.sendStatus(400); return

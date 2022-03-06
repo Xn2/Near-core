@@ -3,7 +3,7 @@ const passport = require("passport");
 const db = require('./sequelize')
 const LocalStrategy = require("passport-local").Strategy;
 
-passport.use('signup', new LocalStrategy(
+passport.use('register', new LocalStrategy(
     {
         usernameField: 'username',
         passwordField: 'password',
