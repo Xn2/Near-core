@@ -5,10 +5,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
-    <link rel="shortcut icon" href="assets/img/favicon-32x32.png" type="image/x-icon">
-    <title>Near UI - Login</title>
+    <link rel="shortcut icon" href="/web/assets/img/favicon-32x32.png" type="image/x-icon">
+    <title>Near UI - Register</title>
+
     <!-- Bootstrap core CSS -->
-    <link href="assets/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/web/assets/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
         .bd-placeholder-img {
@@ -28,14 +29,14 @@
 
 
     <!-- Custom styles for this template -->
-    <link href="login.css" rel="stylesheet">
-    <script src="login.js"></script>
+    <link href="register.css" rel="stylesheet">
 </head>
 
 <body class="text-center">
+    <script src="register.js"></script>
     <main class="form-signin">
-        <form>
-            <img class="mb-4" src="./assets/img/Near-core-Banner.png" alt="" width="200px">
+        <form method="post">
+            <img class="mb-4" src="/web/assets/img/Near-core-Banner.png" alt="" width="200px">
 
             <div class="form-floating">
                 <input type="text" class="form-control" id="username" placeholder="Username">
@@ -45,10 +46,14 @@
                 <input type="password" class="form-control" id="password" placeholder="Password">
                 <label for="password">Password</label>
             </div>
+            <div class="form-floating">
+                <input type="text" class="form-control" id="cardid" placeholder="Card ID">
+                <label for="cardid">Card ID</label>
+            </div>
             <br>
-            <button class="w-100 btn btn-lg btn-primary" type="button" id="submitLogin">Login</button>
-            <br><br> Or <a href="register.html" class="text-muted">register</a>
-            <p class="mt-5 mb-3 text-muted">Not for commercial use. <br>Near is free and will always be.</p>
+            <button class="w-100 btn btn-lg btn-primary" type="submit" id='submitRegister'>Register</button>
+            <br><br> Or <a href="/web/login" class="text-muted">login</a>
+            <p class="mt-5 mb-3 text-muted">Not for commercial use.<br>Near is free and will always be.</p>
         </form>
     </main>
 </body>

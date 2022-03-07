@@ -3,16 +3,16 @@ const db = require('../sequelize')
 const passport = require('../passport.js')
 const musicDB = require('../../data/music_db.json').mdb.music;
 
-router.get("/", async (req, res) => {res.redirect('/web/login.html')})
+router.get("/", async (req, res) => {res.redirect('/web/login')})
 
 router.post('/api/register', passport.authenticate('register', {
-    successRedirect: '/dashboard',
-    failureRedirect: '/nok'
+    successRedirect: '/api/nok',
+    failureRedirect: '/api/nok'
 }))
 
 router.post('/api/login', passport.authenticate('login', {
-    successRedirect: '/dashboard',
-    failureRedirect: '/nok'
+    successRedirect: '/api/ok',
+    failureRedirect: '/api/nok'
 }))
 
 router.get('/api/logout', (req, res) => {
@@ -146,13 +146,12 @@ router.get('/api/me', (req, res) => {
     })
 })
 
-router.get('/dashboard', (req, res) => {
-    if (!req.user) { res.sendStatus(403); return; }
-    res.send("OK dashboard")
+router.get('/api/ok', (req, res) => {
+    res.sendStatus(200)
 })
 
-router.get('/nok', (req, res) => {
-    res.send("NOK")
+router.get('/api/nok', (req, res) => {
+    res.sendStatus(403)
 })
 
 async function getTachiScore(score, song) {

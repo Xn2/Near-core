@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const password = document.getElementById('password').value 
         const postData = JSON.stringify({username, password})
         const res = await fetch('/api/login', {method : "post" , headers: new Headers({'content-type': 'application/json'}), body : postData});
-        console.log(res)
+        if (res.status == "200"){
+            window.location.href = '/web/dashboard'
+        }
     })
 })
