@@ -8,7 +8,7 @@ const rc4 = require("arc4");
 
 function decryptHTTP(req, res, next) {
     if (req.headers['user-agent'] !== "EAMUSE.XRPC/1.0"){
-        return
+        next(); return;
     }
     let data = req.body
     if(req.headers['x-eamuse-info']){

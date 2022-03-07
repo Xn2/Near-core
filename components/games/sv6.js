@@ -1,6 +1,7 @@
 const { EVENT6, COURSES6, SDVX_AUTOMATION_SONGS, EXTENDS6 } = require('../../data/sv6data.js');
-const db = require('../sequelize.js');
+const db = require('../sequelize.js')
 const config = require('../../config.json')
+const musicdb = require('../../data/music_db.json').mdb.music
 
 function getSV6CommonData() {
     let obj = {
@@ -229,6 +230,171 @@ function getSV6CommonData() {
                 ]
             });
         }
+    }
+    return obj
+}
+
+function scoreSort(a,b){
+    if (a.score < b.score) return 1;
+    if (a.score > b.score) return -1;
+    return 0
+}
+
+async function getSV6HiScoreData() {
+    const bestScores = []
+    for (let i = 0; i < musicdb.length; i++) {
+        for (let j = 0; j < Object.keys(musicdb[i].difficulty).length; j++){
+            let scores = await db.BestScore.findAll({where : {musicID : parseInt(musicdb[i]["@id"]), musicType : j + 1}})
+            if (scores.length){
+                scores.sort(scoreSort)
+                bestScores.push(scores[0])
+            }
+        }
+    }
+    const final = [];
+    for (score of bestScores) {
+        const user = await db.User.findOne({ where: { cardID: score.cardID } })
+        final.push({
+            "type": "element",
+            "name": "d",
+            "elements": [
+                {
+                    "type": "element",
+                    "name": "id",
+                    "attributes": {
+                        "__type": "u32"
+                    },
+                    "elements": [
+                        {
+                            "type": "text",
+                            "text": score.musicID
+                        }
+                    ]
+                },
+                {
+                    "type": "element",
+                    "name": "ty",
+                    "attributes": {
+                        "__type": "u32"
+                    },
+                    "elements": [
+                        {
+                            "type": "text",
+                            "text": score.musicType
+                        }
+                    ]
+                },
+                {
+                    "type": "element",
+                    "name": "a_sq",
+                    "attributes": {
+                        "__type": "str"
+                    },
+                    "elements": [
+                        {
+                            "type": "text",
+                            "text": user.friendCode
+                        }
+                    ]
+                },
+                {
+                    "type": "element",
+                    "name": "a_nm",
+                    "attributes": {
+                        "__type": "str"
+                    },
+                    "elements": [
+                        {
+                            "type": "text",
+                            "text": user.ign
+                        }
+                    ]
+                },
+                {
+                    "type": "element",
+                    "name": "a_sc",
+                    "attributes": {
+                        "__type": "u32"
+                    },
+                    "elements": [
+                        {
+                            "type": "text",
+                            "text": score.score
+                        }
+                    ]
+                },
+                {
+                    "type": "element",
+                    "name": "l_sq",
+                    "attributes": {
+                        "__type": "str"
+                    },
+                    "elements": [
+                        {
+                            "type": "text",
+                            "text": user.friendCode
+                        }
+                    ]
+                },
+                {
+                    "type": "element",
+                    "name": "l_nm",
+                    "attributes": {
+                        "__type": "str"
+                    },
+                    "elements": [
+                        {
+                            "type": "text",
+                            "text": user.ign
+                        }
+                    ]
+                },
+                {
+                    "type": "element",
+                    "name": "l_sc",
+                    "attributes": {
+                        "__type": "u32"
+                    },
+                    "elements": [
+                        {
+                            "type": "text",
+                            "text": score.score
+                        }
+                    ]
+                }
+            ]
+        }
+        )
+    }
+    const obj = {
+        "declaration": {
+            "attributes": {
+                "version": "1.0",
+                "encoding": "UTF-8"
+            }
+        },
+        "elements": [
+            {
+                "type": "element",
+                "name": "response",
+                "elements": [
+                    {
+                        "type": "element",
+                        "name": "game",
+                        "attributes": {
+                            "status": "0"
+                        },
+                        "elements": [
+                            {
+                                "type": "element",
+                                "name": "sc",
+                                "elements": final
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
     }
     return obj
 }
@@ -590,7 +756,7 @@ async function getSV6FrozenData() {
 async function getSV6LoadMData(cardID) {
     const user = await db.User.findOne({ where: { cardID } })
     if (!user) return false;
-    const scores = await db.Score.findAll({ where: { cardID } })
+    const scores = await db.BestScore.findAll({ where: { cardID } })
     let preparedScores = []
     for (score of scores) {
         preparedScores.push({
@@ -657,12 +823,12 @@ async function getSV6RivalData(cardID) {
         for (i in user.rivals) {
             const rival = user.rivals[i]
             rivals.push({
-                "type" : "element", 
-                "name" : "rival",
-                "elements" : await getRivalData(rival,i)
+                "type": "element",
+                "name": "rival",
+                "elements": await getRivalData(rival, i)
             })
         }
-    }   
+    }
     return {
         "declaration": {
             "attributes": {
@@ -681,7 +847,7 @@ async function getSV6RivalData(cardID) {
                         "attributes": {
                             "status": "0"
                         },
-                        "elements" : rivals
+                        "elements": rivals
                     }
                 ]
             }
@@ -690,7 +856,7 @@ async function getSV6RivalData(cardID) {
 }
 
 async function getRivalData(rival, num) {
-    const scores = await db.Score.findAll({where : {cardID : rival.cardID}})
+    const scores = await db.BestScore.findAll({ where: { cardID: rival.cardID } })
     if (!scores.length) return [];
     const final = []
     final.push({
@@ -699,7 +865,7 @@ async function getRivalData(rival, num) {
         "attributes": {
             "__type": "s16"
         },
-        "elements" : [{"type" : "text", "text" : num}]
+        "elements": [{ "type": "text", "text": num }]
     });
     final.push({
         "type": "element",
@@ -707,7 +873,7 @@ async function getRivalData(rival, num) {
         "attributes": {
             "__type": "str"
         },
-        "elements" : {"type" : "text", "text" : rival.friendCode}
+        "elements": { "type": "text", "text": rival.friendCode }
     });
     final.push({
         "type": "element",
@@ -715,9 +881,9 @@ async function getRivalData(rival, num) {
         "attributes": {
             "__type": "str"
         },
-        "elements" : [{"type" : "text", "text" : rival.name}]
+        "elements": [{ "type": "text", "text": rival.name }]
     });
-    for (score of scores){
+    for (score of scores) {
         const scoreString = `${score.musicID} ${score.musicType} ${score.score} ${score.clearType} ${score.scoreGrade}`
         final.push({
             "type": "element",
@@ -728,9 +894,9 @@ async function getRivalData(rival, num) {
                     "name": "param",
                     "attributes": {
                         "__type": "u32",
-                        "__count" : "5"
+                        "__count": "5"
                     },
-                    "elements" : [{"type" : "text", "text" : scoreString}]
+                    "elements": [{ "type": "text", "text": scoreString }]
                 }
             ]
         })
@@ -1400,9 +1566,10 @@ async function getParams(cardID) {
 async function saveSV6Score(session, scoreContents) {
     const user = await db.User.findOne({ where: { cardID: scoreContents.refid._text } })
     const track = scoreContents.track
+    const userBest = await db.BestScore.findOne({where : { cardID: scoreContents.refid._text, musicID : track.music_id._text, musicType : track.music_type._text}})
     if (!user) return false;
     if (user.session !== session) return false;
-    await db.Score.create({
+    const scoreObj = {
         playID: track.play_id._text,
         cardID: scoreContents.refid._text,
         musicID: track.music_id._text,
@@ -1433,7 +1600,20 @@ async function saveSV6Score(session, scoreContents) {
         etc: track.etc._text,
         mixID: track.mix_id._text,
         mixLike: track.mix_like._text,
-    })
+    }
+    await db.Score.create(scoreObj)
+    if (!userBest) db.BestScore.create(scoreObj)
+    if (userBest){
+        if (parseInt(track.score._text) > userBest.score){
+            userBest.update({score : scoreObj.score, notesOption : scoreObj.notesOption, scoreGrade : scoreObj.scoreGrade, just: scoreObj.just, critical: scoreObj.critical, near: scoreObj.near, error: scoreObj.error, mode : scoreObj.mode, btnRate : scoreObj.btnRate, volRate : scoreObj.volRate ,longRate : scoreObj.longRate})
+        }
+        if (parseInt(track.exscore._text) > userBest.exscore){
+            userBest.update({exscore : scoreObj.score, notesOption : scoreObj.notesOption, just: scoreObj.just, critical: scoreObj.critical, near: scoreObj.near, error: scoreObj.error, mode : scoreObj.mode})
+        }
+        if (parseInt(track.clear_type._text) > userBest.clearType){
+            userBest.update({clearType : scoreObj.clearType, notesOption : scoreObj.notesOption,  mode : scoreObj.mode, effectiveRate: scoreObj.effectiveRate})
+        }
+    }
     return {
         "declaration": {
             "attributes": {
@@ -1999,5 +2179,5 @@ async function getSkillAnalyzerCourses(cardID) {
     return final
 }
 
-const functions = { getSV6CommonData, getSV6InquireData, getSV6AuthpassData, createSV6PlayerAccount, completeSV6PlayerAccount, loadSV6PlayerAccount, getSV6RivalData, getSV6LoadMData, getSV6FrozenData, saveSV6Score, saveSV6, getSV6PlaySData, getSV6LoungeData, getSV6SaveEData, getSV6PaseliCheckinData, getSV6PaseliConsumeData, getSV6PaseliCheckoutData, getSV6ShopData, SaveSV6SkillData }
+const functions = { getSV6CommonData, getSV6InquireData, getSV6AuthpassData, createSV6PlayerAccount, completeSV6PlayerAccount, loadSV6PlayerAccount, getSV6RivalData, getSV6LoadMData, getSV6FrozenData, saveSV6Score, saveSV6, getSV6PlaySData, getSV6LoungeData, getSV6SaveEData, getSV6PaseliCheckinData, getSV6PaseliConsumeData, getSV6PaseliCheckoutData, getSV6ShopData, SaveSV6SkillData, getSV6HiScoreData }
 module.exports = functions

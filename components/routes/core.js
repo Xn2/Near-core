@@ -59,6 +59,10 @@ router.post('/core', async (req, res) => {
         case "game.sv6_shop":
             initResponse = sv6.getSV6ShopData();
             break;
+        case "game.sv6_hiscore":
+            initResponse = await sv6.getSV6HiScoreData();
+            compress = true
+            break;
         case "cardmng.inquire":
             initResponse = await sv6.getSV6InquireData(req.contents.cardmng._attributes.cardid);
             break;

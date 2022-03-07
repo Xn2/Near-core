@@ -41,7 +41,7 @@ router.post('/api/me/addRival', async (req, res) => {
     if (typeof user.rivals !== "undefined") {
         if (user.rivals.length >= 3) { res.send("Rival limit reached."); return; }
         const rival = await db.User.findOne({ where: { friendCode: req.body.friendCode } })
-        if (!rival) { res.statusCode(400); res.send("Invalid friend code."); return; }
+        if (!rival) { res.send("Invalid friend code."); return; }
         let rivals = user.rivals
         rivals.push({
             name: rival.ign,
@@ -53,7 +53,7 @@ router.post('/api/me/addRival', async (req, res) => {
     }
     else {
         const rival = await db.User.findOne({ where: { friendCode: req.body.friendCode } })
-        if (!rival) { res.statusCode(400); res.send("Invalid friend code."); return; }
+        if (!rival) { res.send("Invalid friend code."); return; }
         let rivals = []
         rivals.push({
             name: rival.ign,
@@ -68,7 +68,7 @@ router.post('/api/me/addRival', async (req, res) => {
 router.post('/api/me/removeRival', async (req, res) => {
     if (!req.user) { res.sendStatus(403); return; }
     const rival = await db.User.findOne({ where: { friendCode: req.body.friendCode } })
-    if (!rival) { res.statusCode(400); res.send("Invalid friend code."); return; }
+    if (!rival) { res.send("Invalid friend code."); return; }
     const user = await db.User.findOne({where : {cardID : req.user.cardID}});
     let rivals = user.rivals
     for (i in rivals){
