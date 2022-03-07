@@ -16,9 +16,8 @@ router.post('/api/login', passport.authenticate('login', {
 }))
 
 router.get('/api/logout', (req, res) => {
-    if (!req.user) { res.sendStatus(403); return; }
     req.logOut();
-    res.redirect('/web');
+    res.redirect('/');
 })
 
 router.get('/api/getAllPlayers', async (req, res) => {
