@@ -98,7 +98,7 @@ router.post('/core', async (req, res) => {
             initResponse = await sv6.getSV6FrozenData();
             break;
         case "game.sv6_load_r":
-            initResponse = await sv6.getSV6RivalData();
+            initResponse = await sv6.getSV6RivalData(req.contents.game.refid._text);
             break; 
         case "game.sv6_save_m":
             initResponse = await sv6.saveSV6Score(req.contents._attributes.tag, req.contents.game);

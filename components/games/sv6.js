@@ -326,7 +326,7 @@ async function createSV6PlayerAccount(cardID, passCode) {
     if (result) return false;
     const gameConfig = genSV6DefaultGameConfigObject("")
     try {
-        await db.User.create({ cardID, passCode, isComplete: false, gameConfig, isClaimed : false, friendCode : gameConfig.code, rivals : [] })
+        await db.User.create({ cardID, passCode, isComplete: false, gameConfig, isClaimed: false, friendCode: gameConfig.code, rivals: [] })
     }
     catch (e) {
         console.log(e)
@@ -649,7 +649,20 @@ function getScoreString(score) {
     return `${score.musicID} ${score.musicType} ${score.score} ${score.exscore} ${score.clearType} ${score.scoreGrade} 0 0 ${score.btnRate} ${score.longRate} ${score.volRate} 0 0 0 0 0 0 0 0 0 0`
 }
 
-async function getSV6RivalData() {
+async function getSV6RivalData(cardID) {
+    const user = await db.User.findOne({ where: { cardID } })
+    const rivals = []
+    if (!user) return false;
+    if (user.rivals.length) {
+        for (i in user.rivals) {
+            const rival = user.rivals[i]
+            rivals.push({
+                "type" : "element", 
+                "name" : "rival",
+                "elements" : await getRivalData(rival,i)
+            })
+        }
+    }   
     return {
         "declaration": {
             "attributes": {
@@ -667,12 +680,62 @@ async function getSV6RivalData() {
                         "name": "game",
                         "attributes": {
                             "status": "0"
-                        }
+                        },
+                        "elements" : rivals
                     }
                 ]
             }
         ]
     }
+}
+
+async function getRivalData(rival, num) {
+    const scores = await db.Score.findAll({where : {cardID : rival.cardID}})
+    if (!scores.length) return [];
+    const final = []
+    final.push({
+        "type": "element",
+        "name": "no",
+        "attributes": {
+            "__type": "s16"
+        },
+        "elements" : [{"type" : "text", "text" : num}]
+    });
+    final.push({
+        "type": "element",
+        "name": "seq",
+        "attributes": {
+            "__type": "str"
+        },
+        "elements" : {"type" : "text", "text" : rival.friendCode}
+    });
+    final.push({
+        "type": "element",
+        "name": "name",
+        "attributes": {
+            "__type": "str"
+        },
+        "elements" : [{"type" : "text", "text" : rival.name}]
+    });
+    for (score of scores){
+        const scoreString = `${score.musicID} ${score.musicType} ${score.score} ${score.clearType} ${score.scoreGrade}`
+        final.push({
+            "type": "element",
+            "name": "music",
+            "elements": [
+                {
+                    "type": "element",
+                    "name": "param",
+                    "attributes": {
+                        "__type": "u32",
+                        "__count" : "5"
+                    },
+                    "elements" : [{"type" : "text", "text" : scoreString}]
+                }
+            ]
+        })
+    }
+    return final
 }
 
 async function getSV6PlaySData() {
@@ -1932,7 +1995,7 @@ async function getSkillAnalyzerCourses(cardID) {
                     }
                 ]
             })
-        }
+    }
     return final
 }
 
