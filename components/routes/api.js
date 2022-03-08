@@ -34,6 +34,26 @@ router.get('/api/getAllPlayers', async (req, res) => {
     res.send(obj)
 })
 
+router.get('/api/getRecentScores', async (req, res) => {
+    if (!req.user) { res.sendStatus(403); return; }
+    const scores = await db.Score.findAll({limit : 20, order: [['updatedAt', 'DESC']]})
+    let obj = []
+    for (score of scores) {
+        const player = await db.User.findOne({where: {cardID : score.cardID}})
+        obj.push({
+            name: player.ign,
+            musicID : score.musicID,
+            musicType : score.musicType,
+            score : score.score,
+            clearType : score.clearType,
+            percentage : score.effectiveRate / 100 + " %",
+            date : (new Date(score.updatedAt)).getTime(),
+        })
+    }
+    res.send(obj)
+})
+
+
 router.post('/api/me/addRival', async (req, res) => {
     if (!req.user) { res.sendStatus(403); return; }
     const user = await db.User.findOne({where : {cardID : req.user.cardID}});
@@ -48,7 +68,7 @@ router.post('/api/me/addRival', async (req, res) => {
             cardID: rival.cardID
         })
         db.User.update({ rivals }, {where : {cardID : req.user.cardID}})
-        res.send(`Added ${rival.ign} as a rival.`)
+        res.sendStatus(200)
     }
     else {
         const rival = await db.User.findOne({ where: { friendCode: req.body.friendCode } })
@@ -60,7 +80,7 @@ router.post('/api/me/addRival', async (req, res) => {
             cardID: rival.cardID
         })
         db.User.update({ rivals }, {where : {cardID : req.user.cardID}})
-        res.send(`Added ${rival.ign} as a rival.`)
+        res.sendStatus(200)
     }
 })
 

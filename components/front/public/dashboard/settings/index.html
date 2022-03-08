@@ -50,13 +50,13 @@
       <div class="position-sticky pt-3">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/web/dashboard/">
+            <a class="nav-link" aria-current="page" href="/web/dashboard/">
               <span data-feather="home"></span>
               Dashboard
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/web/dashboard/users">
+            <a class="nav-link " href="/web/dashboard/users">
               <span data-feather="users"></span>
               Users
             </a>
@@ -68,7 +68,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link " href="/web/dashboard/settings">
+            <a class="nav-link active" href="/web/dashboard/settings">
               <span data-feather="settings"></span>
               Settings
             </a>
@@ -79,31 +79,21 @@
 
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Dashboard</h1>
-        <div class="btn-toolbar mb-2 mb-md-0">
-          <div class="btn-group me-2">
-            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-          </div>
-          <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-            <span data-feather="calendar"></span>
-            This week
-          </button>
-        </div>
+        <h1 class='h2'>Settings</h1>
       </div>
-
-      <h2>Recent Scores</h2>
-      <div class="table-responsive">
-        <span id="table"></span>
-      </div>
+      <h3>Change Passcode</h3><br>
+      <input type="password" id='previousPassCode' class='form-control' placeholder="Previous passcode" style= "width: 20%;"><br>
+      <input type="password" id='passcode' class='form-control' placeholder="New passcode" style= "width: 20%;"><br>
+      <button type='button' class='btn btn-primary' id='changePasscode'>Change Passcode</button>
+      <span id ='success' style='color : green'  hidden='true'><br><br>Passcode changed.</span>
+      <span id ='failure' style='color : red' hidden='true'><br><br>Wrong passcode</span><br>
     </main>
   </div>
 </div>
 
 
     <script src="/web/assets/dist/js/bootstrap.bundle.min.js"></script>
-    
 
-      <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script><script src="/web/dashboard/dashboard.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script><script src="/web/dashboard/settings/settings.js"></script>
   </body>
 </html>
