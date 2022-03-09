@@ -176,14 +176,14 @@ router.get('/api/nok', (req, res) => {
 
 async function getTachiScore(score, song) {
     const lamps = ['FAILED', 'FAILED', 'CLEAR', 'EXCESSIVE CLEAR', 'ULTIMATE CHAIN', 'PERFECT ULTIMATE CHAIN']
-    let jugements
+    let judgements
     let hitMeta
     if (score.just !== 0 && score.just !== null) score.critical += score.just
     if (score.critical !== 0 && score.critical !== null) {
-        jugements = {
+        judgements = {
             critical: score.critical,
             near: score.near,
-            error: score.error
+            miss: score.error
         }
     }
     if (score.maxChain !== 0 && score.maxChain !== null) {
@@ -199,7 +199,7 @@ async function getTachiScore(score, song) {
         identifier: score.musicID.toString(),
         difficulty: await formatDiffName(Object.keys(song.difficulty)[score.musicType], song),
         timeAchieved: (new Date(score.updatedAt)).getTime(),
-        jugements,
+        judgements,
         hitMeta,
     }
 }
