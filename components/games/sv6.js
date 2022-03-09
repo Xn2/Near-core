@@ -686,7 +686,8 @@ function unlockAppealCards(items) {
 async function completeSV6PlayerAccount(cardID, ign, session) {
     let result = await db.User.findOne({ where: { cardID } })
     if (!result || !result.isComplete === false) return false;
-    await result.update({ ign, skillLV: 0, apecaID: 0, session, gameConfig: genSV6DefaultGameConfigObject(ign), isComplete: true })
+    const gameConfig = genSV6DefaultGameConfigObject(ign)
+    await result.update({ ign, skillLV: 0, apecaID: 0, session, gameConfig, isComplete: true, friendCode : gameConfig.code })
     return {
         "declaration": {
             "attributes": {
