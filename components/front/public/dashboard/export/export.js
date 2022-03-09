@@ -9,8 +9,9 @@ async function getTachiExport(){
   if (document.getElementById("noRemoveSV6").checked){
     maxVersion = 6
   }
-  const res = await ( await fetch("/api/me/tachiExport", {method : "post", headers : {'Accept': 'application/json','Content-Type': 'application/json'}, body : JSON.stringify({maxVersion})})).json()
-  console.log(res)
+  const blob = await ( await fetch("/api/me/tachiExport", {method : "post", headers : {'Accept': 'application/json','Content-Type': 'application/json'}, body : JSON.stringify({maxVersion})})).blob()
+  const file = window.URL.createObjectURL(blob);
+  window.location.assign(file);
 }
 
 (function () {

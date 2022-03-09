@@ -136,6 +136,7 @@ router.post('/api/me/tachiExport', async (req, res) => {
             }
         }
     }
+    res.setHeader('Content-Disposition', 'attachment')
     res.send(obj)
 })
 
