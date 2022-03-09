@@ -1,7 +1,5 @@
 document.addEventListener('DOMContentLoaded', async function (e) {
-  document.getElementById('export').addEventListener('click', function(){
     getTachiExport()
-  })
 });
 
 async function getTachiExport(){
@@ -9,9 +7,10 @@ async function getTachiExport(){
   if (document.getElementById("noRemoveSV6").checked){
     maxVersion = 6
   }
-  const blob = await ( await fetch("/api/me/tachiExport", {method : "post", headers : {'Accept': 'application/json','Content-Type': 'application/json'}, body : JSON.stringify({maxVersion})})).blob()
-  const file = window.URL.createObjectURL(blob);
-  window.location.assign(file);
+  const json = await ( await fetch("/api/me/tachiExport", {method : "post", headers : {'Accept': 'application/json','Content-Type': 'application/json'}, body : JSON.stringify({maxVersion})})).json()
+  const link = document.getElementById('exportLink')
+  link.setAttribute('href', `data:text/plain;charset=utf-8, ${encodeURIComponent(JSON.stringify(json))}`)
+  link.setAttribute('download', `SCORES.json`)
 }
 
 (function () {
