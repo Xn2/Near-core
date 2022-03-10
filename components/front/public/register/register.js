@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const postData = JSON.stringify({username, password, cardID})
         const res = await fetch('/api/register', {method : "post" , headers: new Headers({'content-type': 'application/json'}), body : postData});
         if (res.status == "200"){
-            window.location.href = '/web/dashboard'
+            document.getElementById('success').removeAttribute('hidden')
         }
     })
 })
