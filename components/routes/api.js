@@ -42,6 +42,9 @@ router.get('/api/getRecentScores', async (req, res) => {
         const player = await db.User.findOne({where: {cardID : score.cardID}})
         obj.push({
             name: player.ign,
+            title : "",
+            diff : "",
+            level: "",
             musicID : score.musicID,
             musicType : score.musicType,
             score : score.score,

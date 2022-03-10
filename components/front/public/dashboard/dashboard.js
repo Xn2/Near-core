@@ -72,8 +72,14 @@ document.addEventListener('DOMContentLoaded', async function (e) {
   const res = await (await fetch('/api/getRecentScores')).json();
   console.log(res)
   for (score of res){
+    const songInfo = await (await fetch(`https://fairyjoke.net/api/games/sdvx/musics/${score.musicID}`)).json()
     score.date = getFormattedDate(score.date)
     score.clearType = lamps[score.clearType]
+    score.title = songInfo.title
+    score.diff = songInfo.difficulties[parseInt(score.musicType - 1)].diff
+    score.level = songInfo.difficulties[parseInt(score.musicType - 1)].level
+    delete score.musicID
+    delete score.musicType 
   }
   const table = await createTable(res, "Recent Scores")
   document.getElementById('table').appendChild(table)
