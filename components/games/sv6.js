@@ -1609,7 +1609,7 @@ async function saveSV6Score(session, scoreContents) {
             userBest.update({score : scoreObj.score, notesOption : scoreObj.notesOption, scoreGrade : scoreObj.scoreGrade, just: scoreObj.just, critical: scoreObj.critical, near: scoreObj.near, error: scoreObj.error, mode : scoreObj.mode, btnRate : scoreObj.btnRate, volRate : scoreObj.volRate ,longRate : scoreObj.longRate})
         }
         if (parseInt(track.exscore._text) > userBest.exscore){
-            userBest.update({exscore : scoreObj.score, notesOption : scoreObj.notesOption, just: scoreObj.just, critical: scoreObj.critical, near: scoreObj.near, error: scoreObj.error, mode : scoreObj.mode})
+            userBest.update({exscore : scoreObj.exscore, notesOption : scoreObj.notesOption, just: scoreObj.just, critical: scoreObj.critical, near: scoreObj.near, error: scoreObj.error, mode : scoreObj.mode})
         }
         if (parseInt(track.clear_type._text) > userBest.clearType){
             userBest.update({clearType : scoreObj.clearType, notesOption : scoreObj.notesOption,  mode : scoreObj.mode, effectiveRate: scoreObj.effectiveRate})
