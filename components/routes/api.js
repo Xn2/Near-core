@@ -181,7 +181,6 @@ async function getTachiScore(score, song) {
     const lamps = ['FAILED', 'FAILED', 'CLEAR', 'EXCESSIVE CLEAR', 'ULTIMATE CHAIN', 'PERFECT ULTIMATE CHAIN']
     let judgements
     let hitMeta
-    if (score.just !== 0 && score.just !== null) score.critical += score.just
     if (score.critical !== 0 && score.critical !== null) {
         judgements = {
             critical: score.critical,
