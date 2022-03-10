@@ -73,11 +73,12 @@ document.addEventListener('DOMContentLoaded', async function (e) {
   console.log(res)
   for (score of res){
     const songInfo = await (await fetch(`https://fairyjoke.net/api/games/sdvx/musics/${score.musicID}`)).json()
+    if (parseInt(score.musicType) === 4) score.musicType = 3
     score.date = getFormattedDate(score.date)
     score.clearType = lamps[score.clearType]
     score.title = songInfo.title
-    score.diff = songInfo.difficulties[parseInt(score.musicType - 1)].diff
-    score.level = songInfo.difficulties[parseInt(score.musicType - 1)].level
+    score.diff = songInfo.difficulties[parseInt(score.musicType)].diff
+    score.level = songInfo.difficulties[parseInt(score.musicType)].level
     delete score.musicID
     delete score.musicType 
   }
