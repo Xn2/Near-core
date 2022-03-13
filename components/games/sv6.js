@@ -1004,6 +1004,7 @@ async function loadSV6PlayerAccount(cardID, session) {
     let gameConfig = result.gameConfig
     items = unlockNavigators(items);
     items = unlockAppealCards(items);
+    items = await getAchievements(items, cardID)
     return {
         "declaration": {
             "attributes": {
@@ -1506,6 +1507,59 @@ async function loadSV6PlayerAccount(cardID, session) {
     }
 }
 
+async function getAchievements(items, cardID){
+    let achievements = await db.Achievement.findAll({where : {cardID}});
+    for (entry of achievements){
+        items.push({
+            "type": "element",
+            "name": "info",
+            "elements": [
+                {
+                    "type": "element",
+                    "name": "type",
+                    "attributes": {
+                        "__type": "u8"
+                    },
+                    "elements": [
+                        {
+                            "type": "text",
+                            "text": entry.type
+                        }
+                    ]
+                },
+                {
+                    "type": "element",
+                    "name": "id",
+                    "attributes": {
+                        "__type": "u32"
+                    },
+                    "elements": [
+                        {
+                            "type": "text",
+                            "text": entry.paramID
+                        }
+                    ]
+                },
+                {
+                    "type": "element",
+                    "name": "param",
+                    "attributes": {
+                        "__type": "u32",
+                    },
+                    "elements": [
+                        {
+                            "type": "text",
+                            "text": entry.param
+                        }
+                    ]
+                }
+            ]
+
+        })
+    }
+    return items
+}
+
 async function getParams(cardID) {
     let params = await db.Param.findAll({ where: { cardID } })
     if (!params) return []
@@ -1706,6 +1760,28 @@ async function saveSV6(session, cardID, configContents) {
             }
             if (!exists) {
                 db.Param.create({ type: newParam.type._text, paramID: newParam.id._text, param: newParam.param._text })
+            }
+        }
+    }
+    const achievements = await db.Achievement.findAll({ where: { cardID } })
+    if (!achievements.length) {
+        for (entry of configContents.item.info) {
+            db.Achievement.create({ cardID, type: entry.type._text, paramID: entry.id._text, param: entry.param._text })
+        }
+    }
+    else if (typeof configContents.item.info !== "undefined") {
+        for (newParam of configContents.item.info) {
+            let exists = false
+            for (currentParam of achievements) {
+                if (currentParam.type.toString() == newParam.type._text && currentParam.paramID.toString() == newParam.id._text) {
+                    exists = true
+                    if (currentParam.param !== newParam.param._text) {
+                        await currentParam.update({ param: newParam.param._text })
+                    }
+                }
+            }
+            if (!exists) {
+                db.Achievement.create({ type: newParam.type._text, paramID: newParam.id._text, param: newParam.param._text })
             }
         }
     }
