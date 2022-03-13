@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => sequelize.define('Param', {
         allowNull: false,
     },
     param: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
     },
 }, {
