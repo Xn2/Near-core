@@ -234,7 +234,7 @@ function getSV6CommonData() {
     return obj
 }
 
-function scoreSort(a,b){
+function scoreSort(a, b) {
     if (a.score < b.score) return 1;
     if (a.score > b.score) return -1;
     return 0
@@ -243,9 +243,9 @@ function scoreSort(a,b){
 async function getSV6HiScoreData() {
     const bestScores = []
     for (let i = 0; i < musicdb.length; i++) {
-        for (let j = 0; j < Object.keys(musicdb[i].difficulty).length; j++){
-            let scores = await db.BestScore.findAll({where : {musicID : parseInt(musicdb[i]["@id"]), musicType : j + 1}})
-            if (scores.length){
+        for (let j = 0; j < Object.keys(musicdb[i].difficulty).length; j++) {
+            let scores = await db.BestScore.findAll({ where: { musicID: parseInt(musicdb[i]["@id"]), musicType: j + 1 } })
+            if (scores.length) {
                 scores.sort(scoreSort)
                 bestScores.push(scores[0])
             }
@@ -687,7 +687,7 @@ async function completeSV6PlayerAccount(cardID, ign, session) {
     let result = await db.User.findOne({ where: { cardID } })
     if (!result || !result.isComplete === false) return false;
     const gameConfig = genSV6DefaultGameConfigObject(ign)
-    await result.update({ ign, skillLV: 0, apecaID: 0, session, gameConfig, isComplete: true, friendCode : gameConfig.code })
+    await result.update({ ign, skillLV: 0, apecaID: 0, session, gameConfig, isComplete: true, friendCode: gameConfig.code })
     return {
         "declaration": {
             "attributes": {
@@ -1507,9 +1507,9 @@ async function loadSV6PlayerAccount(cardID, session) {
     }
 }
 
-async function getAchievements(items, cardID){
-    let achievements = await db.Achievement.findAll({where : {cardID}});
-    for (entry of achievements){
+async function getAchievements(items, cardID) {
+    let achievements = await db.Achievement.findAll({ where: { cardID } });
+    for (entry of achievements) {
         items.push({
             "type": "element",
             "name": "info",
@@ -1621,7 +1621,7 @@ async function getParams(cardID) {
 async function saveSV6Score(session, scoreContents) {
     const user = await db.User.findOne({ where: { cardID: scoreContents.refid._text } })
     const track = scoreContents.track
-    const userBest = await db.BestScore.findOne({where : { cardID: scoreContents.refid._text, musicID : track.music_id._text, musicType : track.music_type._text}})
+    const userBest = await db.BestScore.findOne({ where: { cardID: scoreContents.refid._text, musicID: track.music_id._text, musicType: track.music_type._text } })
     if (!user) return false;
     if (user.session !== session) return false;
     const scoreObj = {
@@ -1658,15 +1658,15 @@ async function saveSV6Score(session, scoreContents) {
     }
     await db.Score.create(scoreObj)
     if (!userBest) db.BestScore.create(scoreObj)
-    if (userBest){
-        if (parseInt(track.score._text) > userBest.score){
-            userBest.update({score : scoreObj.score, notesOption : scoreObj.notesOption, scoreGrade : scoreObj.scoreGrade, just: scoreObj.just, critical: scoreObj.critical, near: scoreObj.near, error: scoreObj.error, mode : scoreObj.mode, btnRate : scoreObj.btnRate, volRate : scoreObj.volRate ,longRate : scoreObj.longRate})
+    if (userBest) {
+        if (parseInt(track.score._text) > userBest.score) {
+            userBest.update({ score: scoreObj.score, notesOption: scoreObj.notesOption, scoreGrade: scoreObj.scoreGrade, just: scoreObj.just, critical: scoreObj.critical, near: scoreObj.near, error: scoreObj.error, mode: scoreObj.mode, btnRate: scoreObj.btnRate, volRate: scoreObj.volRate, longRate: scoreObj.longRate })
         }
-        if (parseInt(track.exscore._text) > userBest.exscore){
-            userBest.update({exscore : scoreObj.exscore, notesOption : scoreObj.notesOption, just: scoreObj.just, critical: scoreObj.critical, near: scoreObj.near, error: scoreObj.error, mode : scoreObj.mode})
+        if (parseInt(track.exscore._text) > userBest.exscore) {
+            userBest.update({ exscore: scoreObj.exscore, notesOption: scoreObj.notesOption, just: scoreObj.just, critical: scoreObj.critical, near: scoreObj.near, error: scoreObj.error, mode: scoreObj.mode })
         }
-        if (parseInt(track.clear_type._text) > userBest.clearType){
-            userBest.update({clearType : scoreObj.clearType, notesOption : scoreObj.notesOption,  mode : scoreObj.mode, effectiveRate: scoreObj.effectiveRate})
+        if (parseInt(track.clear_type._text) > userBest.clearType) {
+            userBest.update({ clearType: scoreObj.clearType, notesOption: scoreObj.notesOption, mode: scoreObj.mode, effectiveRate: scoreObj.effectiveRate })
         }
     }
     return {
@@ -1769,8 +1769,8 @@ async function saveSV6(session, cardID, configContents) {
             db.Achievement.create({ cardID, type: entry.type._text, paramID: entry.id._text, param: entry.param._text })
         }
     }
-    else if (typeof configContents.item.info !== "undefined") {
-        for (newParam of configContents.item.info) {
+    else if (types.get(configContents.item.info) === types.array) {
+        for (newParam of configContents.item) {
             let exists = false
             for (currentParam of achievements) {
                 if (currentParam.type.toString() == newParam.type._text && currentParam.paramID.toString() == newParam.id._text) {
@@ -1781,10 +1781,25 @@ async function saveSV6(session, cardID, configContents) {
                 }
             }
             if (!exists) {
-                db.Achievement.create({ type: newParam.type._text, paramID: newParam.id._text, param: newParam.param._text })
+                db.Achievement.create({ cardID, type: newParam.type._text, paramID: newParam.id._text, param: newParam.param._text })
             }
         }
     }
+    else if (types.get(configContents.item.info) === types.object) {
+        let exists = false
+        for (currentParam of achievements) {
+            if (currentParam.type.toString() == configContents.item.info.type._text && currentParam.paramID.toString() == configContents.item.info.id._text) {
+                exists = true
+                if (currentParam.param !== configContents.item.info.param._text) {
+                    await currentParam.update({ param: configContents.item.info.param._text })
+                }
+            }
+        }
+        if (!exists) {
+            db.Achievement.create({ cardID, type: configContents.item.info.type._text, paramID: configContents.item.info.id._text, param: configContents.item.info.param._text })
+        }
+    }
+
     try {
         await user.update({ gameConfig: newConfig, apecaID: configContents.appeal_id._text, skillLV: configContents.skill_level._text })
         return {
@@ -2254,6 +2269,19 @@ async function getSkillAnalyzerCourses(cardID) {
             })
     }
     return final
+}
+
+const types = {
+    'get': function (prop) {
+        return Object.prototype.toString.call(prop);
+    },
+    'null': '[object Null]',
+    'object': '[object Object]',
+    'array': '[object Array]',
+    'string': '[object String]',
+    'boolean': '[object Boolean]',
+    'number': '[object Number]',
+    'date': '[object Date]',
 }
 
 const functions = { getSV6CommonData, getSV6InquireData, getSV6AuthpassData, createSV6PlayerAccount, completeSV6PlayerAccount, loadSV6PlayerAccount, getSV6RivalData, getSV6LoadMData, getSV6FrozenData, saveSV6Score, saveSV6, getSV6PlaySData, getSV6LoungeData, getSV6SaveEData, getSV6PaseliCheckinData, getSV6PaseliConsumeData, getSV6PaseliCheckoutData, getSV6ShopData, SaveSV6SkillData, getSV6HiScoreData }
