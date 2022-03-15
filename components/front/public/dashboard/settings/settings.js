@@ -65,7 +65,7 @@ async function setSV6Settings(){
   const akaname = parseInt(document.getElementById('akaname').value)
   const bgm = parseInt(document.getElementById('bgm').value)
   const subbg = parseInt(document.getElementById('subbg').value)
-  const nemsys = parseInt(document.getElementById('subbg').value)
+  const nemsys = parseInt(document.getElementById('nemsys').value)
   const stampA = parseInt(document.getElementById('stampA').value)
   const stampB = parseInt(document.getElementById('stampB').value)
   const stampC = parseInt(document.getElementById('stampC').value)
