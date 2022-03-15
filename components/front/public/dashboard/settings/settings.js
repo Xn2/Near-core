@@ -22,6 +22,13 @@ document.addEventListener('DOMContentLoaded', async function (e) {
     if (bgm.value == currentSettings.bgm) el.setAttribute('selected', true)
     document.getElementById('bgm').appendChild(el)
   }
+  for (nemsys of settings.nemsys){
+    const el = document.createElement("option")
+    el.value = nemsys.value
+    el.innerText = nemsys.name
+    if (nemsys.value == currentSettings.nemsys) el.setAttribute('selected', true)
+    document.getElementById('nemsys').appendChild(el)
+  }
   for (subbg of settings.subbg){
     const el = document.createElement("option")
     el.value = subbg.value
@@ -58,6 +65,7 @@ async function setSV6Settings(){
   const akaname = parseInt(document.getElementById('akaname').value)
   const bgm = parseInt(document.getElementById('bgm').value)
   const subbg = parseInt(document.getElementById('subbg').value)
+  const nemsys = parseInt(document.getElementById('subbg').value)
   const stampA = parseInt(document.getElementById('stampA').value)
   const stampB = parseInt(document.getElementById('stampB').value)
   const stampC = parseInt(document.getElementById('stampC').value)
@@ -66,6 +74,7 @@ async function setSV6Settings(){
     akaname,
     bgm,
     subbg,
+    nemsys,
     stampA,
     stampB,
     stampC,
