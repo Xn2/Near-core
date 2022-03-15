@@ -146,12 +146,14 @@ router.post('/api/me/tachiExport', async (req, res) => {
 router.get('/api/me/getSV6Settings', async (req, res) => {
     if (!req.user) { res.sendStatus(403); return; }
     const param = await db.Param.findOne({where : {cardID : req.user.cardID, type : 2, paramID : 2}})
-    if (!param || param.param == "0"){
+    const akaParam = await db.Param.findOne({where : {cardID : req.user.cardID, type : 6, paramID : 0}})
+    if ((!param || param.param == "0") && (!akaParam || akaParam.param == "0")){
         res.send({})
     }
     else{
         const paramArr = param.param.split(' ')
         res.send({
+            akaname : akaParam.param,
             bgm : paramArr[0],
             subbg : paramArr[1],
             nemsys : paramArr[2],
@@ -166,15 +168,21 @@ router.get('/api/me/getSV6Settings', async (req, res) => {
 router.post('/api/me/setSV6Settings', async (req, res) => {
     if (!req.user) { res.sendStatus(403); return; }
     const param = await db.Param.findOne({where : {cardID : req.user.cardID, type : 2, paramID : 2}})
+    const akaParam = await db.Param.findOne({where : {cardID : req.user.cardID, type : 6, paramID : 0}})
     const paramStr = `${req.body.bgm} ${req.body.subbg} ${req.body.nemsys} ${req.body.stampA} ${req.body.stampB} ${req.body.stampC} ${req.body.stampD}`
     if (!param){
-        await db.Param.create({cardID : req.user.cardID, type : 2, paramID : 2 , param : paramStr})
-        res.sendStatus("200")
+        await db.Param.bulkCreate([
+            {cardID : req.user.cardID, type : 2, paramID : 2 , param : paramStr},
+            {cardID : req.user.cardID, type : 6, paramID : 0 , param : req.body.akaname},
+            {cardID : req.user.cardID, type : 6, paramID : 1 , param : req.body.akaname},
+            {cardID : req.user.cardID, type : 6, paramID : 2 , param : req.body.akaname},
+        ])
     }
     else{
         await param.update({param : paramStr})
-        res.sendStatus("200")
+        await db.Param.update({param : req.body.akaname}, {where : {cardID : req.user.cardID, type : 6, paramID : [0,1,2]}})
     }
+    res.sendStatus("200")
 })
 
 router.get('/api/me/profile', async (req, res) => {

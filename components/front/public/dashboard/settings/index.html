@@ -7,7 +7,7 @@
     <title>Near UI - Dashboard</title>
 
     <!-- Bootstrap core CSS -->
-<link href="/web/assets/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/web/assets/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
       .bd-placeholder-img {
@@ -82,11 +82,59 @@
         <h1 class='h2'>Settings</h1>
       </div>
       <h3>Change Passcode</h3><br>
-      <input type="password" id='previousPassCode' class='form-control' placeholder="Previous passcode" style= "width: 20%;"><br>
-      <input type="password" id='passcode' class='form-control' placeholder="New passcode" style= "width: 20%;"><br>
-      <button type='button' class='btn btn-primary' id='changePasscode'>Change Passcode</button>
-      <span id ='success' style='color : green'  hidden='true'><br><br>Passcode changed.</span>
-      <span id ='failure' style='color : red' hidden='true'><br><br>Wrong passcode</span><br>
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <input type="password" id='previousPassCode' class='form-control' placeholder="Previous passcode"><br>
+          </div>
+          <div class="col">
+            <input type="password" id='passcode' class='form-control' placeholder="New passcode"><br>
+          </div>
+        </div>
+        <button type='button' class='btn btn-primary' id='changePasscode'>Change Passcode</button>
+        <span id ='success1' style='color : green'  hidden='true'><br><br>Passcode changed.</span>
+        <span id ='failure' style='color : red' hidden='true'><br><br>Wrong passcode</span><br>
+      </div>
+      <hr>
+      <h3>Sound Voltex Exceed Gear Settings</h3><br>
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            Akaname
+            <select name="akaname" id="akaname" class="form-select"></select><br>
+          </div>
+          <div class="col">
+            Background Music
+            <select name="bgm" id="bgm" class="form-select"></select><br>
+          </div>
+          <div class="col">
+            Submonitor BG
+            <select name="subbg" id="subbg" class="form-select"></select><br>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            Stamp A
+            <select name="stampA" id="stampA" class="form-select"></select><br>
+          </div>
+          <div class="col">
+            Stamp B
+            <select name="stampB" id="stampB" class="form-select"></select><br>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            Stamp C
+            <select name="stampC" id="stampC" class="form-select"></select><br>
+          </div>
+          <div class="col">
+            Stamp D
+            <select name="stampD" id="stampD" class="form-select"></select><br>
+          </div>
+        </div>
+        <button type='button' class="btn btn-primary" id='saveSettings'>Save Settings</button>
+        <span style="color : green" hidden id='success2'><br><br>Success! Settings saved.</span>
+      </div>
     </main>
   </div>
 </div>
