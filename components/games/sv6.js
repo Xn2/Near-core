@@ -1770,7 +1770,7 @@ async function saveSV6(session, cardID, configContents) {
         }
     }
     else if (types.get(configContents.item.info) === types.array) {
-        for (newParam of configContents.item) {
+        for (newParam of configContents.item.info) {
             let exists = false
             for (currentParam of achievements) {
                 if (currentParam.type.toString() == newParam.type._text && currentParam.paramID.toString() == newParam.id._text) {
