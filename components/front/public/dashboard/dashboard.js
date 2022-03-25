@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', async function(e) {
         score.date = getFormattedDate(score.date)
         score.clearType = lamps[score.clearType]
         score.title = songInfo.title
-        if (success){
+        if (songInfo.success){
             score.diff = songInfo.difficulties[parseInt(score.musicType)].diff
             score.level = songInfo.difficulties[parseInt(score.musicType)].level
         }
