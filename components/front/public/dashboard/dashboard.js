@@ -76,8 +76,10 @@ document.addEventListener('DOMContentLoaded', async function(e) {
         score.date = getFormattedDate(score.date)
         score.clearType = lamps[score.clearType]
         score.title = songInfo.title
-        score.diff = songInfo.difficulties[parseInt(score.musicType)].diff
-        score.level = songInfo.difficulties[parseInt(score.musicType)].level
+        if (success){
+            score.diff = songInfo.difficulties[parseInt(score.musicType)].diff
+            score.level = songInfo.difficulties[parseInt(score.musicType)].level
+        }
         delete score.musicID
         delete score.musicType
     }
@@ -88,9 +90,11 @@ document.addEventListener('DOMContentLoaded', async function(e) {
 async function getSongInformation(mid) {
     try {
         const res = await fetch(`https://fairyjoke.net/api/games/sdvx/musics/${mid}`, { mode: "no-cors" })
-        return await res.json();
+        const json = await res.json();
+        json.success = true;
+        return json
     } catch {
-        return { title: "NOT FOUND", diff: "NOT FOUND", level: 0 }
+        return { title: "NOT FOUND", diff: "NOT FOUND", level: 0, success : false }
     }
 }
 
