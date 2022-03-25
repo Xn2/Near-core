@@ -69,11 +69,12 @@ function createDeleteButton(entity, id, func) {
 
 document.addEventListener('DOMContentLoaded', async function(e) {
     let res;
+    
     try {
         res = await(await fetch('/api/getRecentScores')).json();
     }
     catch {
-        document.window.location = '/web/login'
+        window.location.href = '/web/login'
     }
 
     for (score of res) {
