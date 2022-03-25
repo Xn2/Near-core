@@ -3,7 +3,7 @@ const db = require('../sequelize')
 const passport = require('../passport.js')
 const musicDB = require('../../data/music_db.json').mdb.music;
 
-router.get("/", async (req, res) => {res.redirect('/web/login')})
+router.get("/", async(req, res) => { res.redirect('/web/login') })
 
 router.post('/api/register', passport.authenticate('register', {
     successRedirect: '/api/nok',
@@ -20,7 +20,7 @@ router.get('/api/logout', (req, res) => {
     res.redirect('/');
 })
 
-router.get('/api/getAllPlayers', async (req, res) => {
+router.get('/api/getAllPlayers', async(req, res) => {
     if (!req.user) { res.sendStatus(403); return; }
     const users = await db.User.findAll({ where: { isComplete: true } })
     let obj = []
@@ -34,32 +34,37 @@ router.get('/api/getAllPlayers', async (req, res) => {
     res.send(obj)
 })
 
-router.get('/api/getRecentScores', async (req, res) => {
+router.get('/api/getRecentScores', async(req, res) => {
     if (!req.user) { res.sendStatus(403); return; }
-    const scores = await db.Score.findAll({limit : 20, order: [['updatedAt', 'DESC']]})
+    const scores = await db.Score.findAll({
+        limit: 20,
+        order: [
+            ['updatedAt', 'DESC']
+        ]
+    })
     let obj = []
     for (score of scores) {
-        const player = await db.User.findOne({where: {cardID : score.cardID}})
+        const player = await db.User.findOne({ where: { cardID: score.cardID } })
         obj.push({
             name: player.ign,
-            title : "",
-            diff : "",
+            title: "",
+            diff: "",
             level: "",
-            musicID : score.musicID,
-            musicType : score.musicType,
-            score : score.score,
-            clearType : score.clearType,
-            percentage : score.effectiveRate / 100 + " %",
-            date : (new Date(score.updatedAt)).getTime(),
+            musicID: score.musicID,
+            musicType: score.musicType,
+            score: score.score,
+            clearType: score.clearType,
+            percentage: score.effectiveRate / 100 + " %",
+            date: (new Date(score.updatedAt)).getTime(),
         })
     }
     res.send(obj)
 })
 
 
-router.post('/api/me/addRival', async (req, res) => {
+router.post('/api/me/addRival', async(req, res) => {
     if (!req.user) { res.sendStatus(403); return; }
-    const user = await db.User.findOne({where : {cardID : req.user.cardID}});
+    const user = await db.User.findOne({ where: { cardID: req.user.cardID } });
     if (typeof user.rivals !== "undefined") {
         if (user.rivals.length >= 3) { res.send("Rival limit reached."); return; }
         const rival = await db.User.findOne({ where: { friendCode: req.body.friendCode } })
@@ -70,10 +75,9 @@ router.post('/api/me/addRival', async (req, res) => {
             friendCode: rival.friendCode,
             cardID: rival.cardID
         })
-        db.User.update({ rivals }, {where : {cardID : req.user.cardID}})
+        db.User.update({ rivals }, { where: { cardID: req.user.cardID } })
         res.sendStatus(200)
-    }
-    else {
+    } else {
         const rival = await db.User.findOne({ where: { friendCode: req.body.friendCode } })
         if (!rival) { res.send("Invalid friend code."); return; }
         let rivals = []
@@ -82,45 +86,45 @@ router.post('/api/me/addRival', async (req, res) => {
             friendCode: rival.friendCode,
             cardID: rival.cardID
         })
-        db.User.update({ rivals }, {where : {cardID : req.user.cardID}})
+        db.User.update({ rivals }, { where: { cardID: req.user.cardID } })
         res.sendStatus(200)
     }
 })
 
-router.post('/api/me/removeRival', async (req, res) => {
+router.post('/api/me/removeRival', async(req, res) => {
     if (!req.user) { res.sendStatus(403); return; }
     const rival = await db.User.findOne({ where: { friendCode: req.body.friendCode } })
     if (!rival) { res.send("Invalid friend code."); return; }
-    const user = await db.User.findOne({where : {cardID : req.user.cardID}});
+    const user = await db.User.findOne({ where: { cardID: req.user.cardID } });
     let rivals = user.rivals
-    for (i in rivals){
+    for (i in rivals) {
         const rival = rivals[i];
-        if (rival.friendCode === req.body.friendCode){
+        if (rival.friendCode === req.body.friendCode) {
             rivals.splice(i, 1)
         }
     }
-    db.User.update({ rivals }, {where : {cardID : req.user.cardID}})
+    db.User.update({ rivals }, { where: { cardID: req.user.cardID } })
     res.send(`Removed ${rival.ign} as a rival.`)
 })
 
-router.get('/api/me/getRivals', async (req, res) => {
+router.get('/api/me/getRivals', async(req, res) => {
     if (!req.user) { res.sendStatus(403); return; }
-    const user = await db.User.findOne({where : {cardID : req.user.cardID}});
+    const user = await db.User.findOne({ where: { cardID: req.user.cardID } });
     let rivals = user.rivals
     let sanitized = []
-    for (rival of rivals){
-        sanitized.push({name : rival.name, friendCode : rival.friendCode})
+    for (rival of rivals) {
+        sanitized.push({ name: rival.name, friendCode: rival.friendCode })
     }
     res.send(sanitized)
 })
 
-router.get('/api/me/scores', async (req, res) => {
+router.get('/api/me/scores', async(req, res) => {
     if (!req.user) { res.sendStatus(403); return; }
     const scores = await db.Score.findAll({ where: { cardID: req.user.cardID } })
     res.send(scores)
 })
 
-router.post('/api/me/tachiExport', async (req, res) => {
+router.post('/api/me/tachiExport', async(req, res) => {
     if (!req.user) { res.sendStatus(403); return; }
     const scores = await db.Score.findAll({ where: { cardID: req.user.cardID } })
     const obj = {
@@ -143,55 +147,69 @@ router.post('/api/me/tachiExport', async (req, res) => {
     res.send(obj)
 })
 
-router.get('/api/me/getSV6Settings', async (req, res) => {
+router.get('/api/me/getSV6Settings', async(req, res) => {
     if (!req.user) { res.sendStatus(403); return; }
-    const param = await db.Param.findOne({where : {cardID : req.user.cardID, type : 2, paramID : 2}})
-    const akaParam = await db.Param.findOne({where : {cardID : req.user.cardID, type : 6, paramID : 0}})
-    if ((!param || param.param == "0") && (!akaParam || akaParam.param == "0")){
+    const param = await db.Param.findOne({ where: { cardID: req.user.cardID, type: 2, paramID: 2 } })
+    const akaParam = await db.Param.findOne({ where: { cardID: req.user.cardID, type: 6, paramID: 0 } })
+    if ((!param || param.param == "0") && (!akaParam || akaParam.param == "0")) {
         res.send({})
-    }
-    else{
+    } else {
         const paramArr = param.param.split(' ')
         res.send({
-            akaname : akaParam.param,
-            bgm : paramArr[0],
-            subbg : paramArr[1],
-            nemsys : paramArr[2],
-            stampA : paramArr[3],
-            stampB : paramArr[4],
-            stampC : paramArr[5],
-            stampD : paramArr[6],
+            akaname: akaParam.param,
+            bgm: paramArr[0],
+            subbg: paramArr[1],
+            nemsys: paramArr[2],
+            stampA: paramArr[3],
+            stampB: paramArr[4],
+            stampC: paramArr[5],
+            stampD: paramArr[6],
         })
     }
 })
 
-router.post('/api/me/setSV6Settings', async (req, res) => {
+router.post('/api/me/setSV6Settings', async(req, res) => {
     if (!req.user) { res.sendStatus(403); return; }
-    const param = await db.Param.findOne({where : {cardID : req.user.cardID, type : 2, paramID : 2}})
-    const akaParam = await db.Param.findOne({where : {cardID : req.user.cardID, type : 6, paramID : 0}})
+    const param = await db.Param.findOne({ where: { cardID: req.user.cardID, type: 2, paramID: 2 } })
+    const akaParam = await db.Param.findOne({ where: { cardID: req.user.cardID, type: 6, paramID: 0 } })
     const paramStr = `${req.body.bgm} ${req.body.subbg} ${req.body.nemsys} ${req.body.stampA} ${req.body.stampB} ${req.body.stampC} ${req.body.stampD}`
-    if (!param){
+    if (!param) {
         await db.Param.bulkCreate([
-            {cardID : req.user.cardID, type : 2, paramID : 2 , param : paramStr},
-            {cardID : req.user.cardID, type : 6, paramID : 0 , param : req.body.akaname},
-            {cardID : req.user.cardID, type : 6, paramID : 1 , param : req.body.akaname},
-            {cardID : req.user.cardID, type : 6, paramID : 2 , param : req.body.akaname},
+            { cardID: req.user.cardID, type: 2, paramID: 2, param: paramStr },
+            { cardID: req.user.cardID, type: 6, paramID: 0, param: req.body.akaname },
+            { cardID: req.user.cardID, type: 6, paramID: 1, param: req.body.akaname },
+            { cardID: req.user.cardID, type: 6, paramID: 2, param: req.body.akaname },
         ])
-    }
-    else{
-        await param.update({param : paramStr})
-        await db.Param.update({param : req.body.akaname}, {where : {cardID : req.user.cardID, type : 6, paramID : [0,1,2]}})
+    } else {
+        await param.update({ param: paramStr })
+        await db.Param.update({ param: req.body.akaname }, { where: { cardID: req.user.cardID, type: 6, paramID: [0, 1, 2] } })
     }
     res.sendStatus("200")
 })
 
-router.get('/api/me/profile', async (req, res) => {
+router.get('/api/me/profile', async(req, res) => {
     if (!req.user) { res.sendStatus(403); return; }
     const user = await db.User.findOne({ where: { cardID: req.user.cardID }, attributes: { exclude: ['passCode', 'session', 'rivals'] } })
     res.send(user)
 })
 
-router.post('/api/me/changePasscode', async (req, res) => {
+router.get('/api/scores', async(req, res) => {
+    if (!req.user) { res.sendStatus(403); return; }
+    const scores = await db.Score.findAll({ where: { cardID: req.user.cardID } })
+    res.send(scores)
+})
+
+router.get('/api/profile', async(req, res) => {
+    if (!req.user) { res.sendStatus(403); return; }
+    if (!req.body.username) { res.sendStatus(400); return; }
+    const profile = await db.User.findOne({
+        where: { ign: req.body.username.toUpperCase() },
+        attributes: { exclude: ['passCode', 'session', 'rivals', 'gameConfig'] }
+    })
+    res.send(profile)
+})
+
+router.post('/api/me/changePasscode', async(req, res) => {
     if (!req.user) { res.sendStatus(403); return; }
     const user = await db.User.findOne({ where: { cardID: req.user.cardID } })
     if (req.body.passCode !== user.passCode && req.body.previousPassCode === user.passCode) {
