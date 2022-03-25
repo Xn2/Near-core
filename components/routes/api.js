@@ -207,6 +207,7 @@ router.get('/api/profile/:username', async(req, res) => {
         where: { ign: req.params.username.toUpperCase() },
         attributes: { exclude: ['passCode', 'session', 'rivals', 'gameConfig'] }
     });
+    if (!profile) { res.sendStatus(404); return; }
     res.send(profile);
 })
 
