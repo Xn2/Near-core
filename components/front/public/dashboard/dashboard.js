@@ -68,8 +68,14 @@ function createDeleteButton(entity, id, func) {
 }
 
 document.addEventListener('DOMContentLoaded', async function(e) {
-    const res = await (await fetch('/api/getRecentScores')).json();
-    console.log(res)
+    let res;
+    try {
+        res = await(await fetch('/api/getRecentScores')).json();
+    }
+    catch {
+        document.window.location = '/web/login'
+    }
+
     for (score of res) {
         const songInfo = await getSongInformation(score.musicID)
         if (parseInt(score.musicType) === 4) score.musicType = 3
@@ -88,14 +94,13 @@ document.addEventListener('DOMContentLoaded', async function(e) {
 });
 
 async function getSongInformation(mid) {
-    try {
-        const res = await fetch(`https://fairyjoke.net/api/games/sdvx/musics/${mid}`, { mode: "no-cors" })
+        const res = await fetch(`https://fairyjoke.net/api/games/sdvx/musics/${mid}`)
+        if (res.status !== 200){
+            return { title: "NOT FOUND", diff: "NOT FOUND", level: 0, success : false }
+        }
         const json = await res.json();
         json.success = true;
         return json
-    } catch {
-        return { title: "NOT FOUND", diff: "NOT FOUND", level: 0, success : false }
-    }
 }
 
 function getFormattedDate(ts) {
