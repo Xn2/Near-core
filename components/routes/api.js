@@ -193,20 +193,21 @@ router.get('/api/me/profile', async(req, res) => {
     res.send(user)
 })
 
-router.get('/api/scores', async(req, res) => {
+router.get('/api/scores/:username', async(req, res) => {
     if (!req.user) { res.sendStatus(403); return; }
-    const scores = await db.Score.findAll({ where: { cardID: req.user.cardID } })
-    res.send(scores)
+    const user = await db.User.findOne({ where: { ign: req.params.username.toUpperCase() } })
+    if (user) { res.sendStatus(404); return; }
+    const scores = await db.Score.findAll({ where: { cardID: user.cardID } });
+    res.send(scores);
 })
 
-router.get('/api/profile', async(req, res) => {
+router.get('/api/profile/:username', async(req, res) => {
     if (!req.user) { res.sendStatus(403); return; }
-    if (!req.body.username) { res.sendStatus(400); return; }
     const profile = await db.User.findOne({
-        where: { ign: req.body.username.toUpperCase() },
+        where: { ign: req.params.username.toUpperCase() },
         attributes: { exclude: ['passCode', 'session', 'rivals', 'gameConfig'] }
-    })
-    res.send(profile)
+    });
+    res.send(profile);
 })
 
 router.post('/api/me/changePasscode', async(req, res) => {
