@@ -69,7 +69,7 @@ function createDeleteButton(entity, id, func) {
 
 document.addEventListener('DOMContentLoaded', async function(e) {
     let res;
-    
+
     try {
         res = await(await fetch('/api/getRecentScores')).json();
     }
@@ -92,6 +92,7 @@ document.addEventListener('DOMContentLoaded', async function(e) {
     }
     const table = await createTable(res, "Recent Scores")
     document.getElementById('table').appendChild(table)
+    document.getElementById('loading').setAttribute('hidden', 'true')
 });
 
 async function getSongInformation(mid) {
