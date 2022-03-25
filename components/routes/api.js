@@ -205,7 +205,7 @@ router.get('/api/profile/:username', async(req, res) => {
     if (!req.user) { res.sendStatus(403); return; }
     const profile = await db.User.findOne({
         where: { ign: req.params.username.toUpperCase() },
-        attributes: { exclude: ['passCode', 'session', 'rivals', 'gameConfig'] }
+        attributes: { exclude: ['passCode', 'session', 'rivals', 'gameConfig', 'cardID', "isComplete", "isClaimed"] }
     });
     if (!profile) { res.sendStatus(404); return; }
     res.send(profile);
