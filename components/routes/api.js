@@ -196,7 +196,7 @@ router.get('/api/me/profile', async(req, res) => {
 router.get('/api/scores/:username', async(req, res) => {
     if (!req.user) { res.sendStatus(403); return; }
     const user = await db.User.findOne({ where: { ign: req.params.username.toUpperCase() } })
-    if (user) { res.sendStatus(404); return; }
+    if (!user) { res.sendStatus(404); return; }
     const scores = await db.Score.findAll({ where: { cardID: user.cardID } });
     res.send(scores);
 })
