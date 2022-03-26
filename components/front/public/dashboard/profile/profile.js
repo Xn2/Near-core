@@ -1,4 +1,6 @@
 let rivals
+let profile
+let scores
 async function createTable(arr, entity, editable = false, customFieldFunc = null, deletable = true) {
   if (!arr.length) {
     const warn = document.createElement("h5")
@@ -26,12 +28,10 @@ async function createTable(arr, entity, editable = false, customFieldFunc = null
   let body = document.createElement('tbody')
   for (obj of arr) {
     let tr = document.createElement('tr');
-    let name = obj.name
     tr.setAttribute('id', obj['friendCode'])
     for (const [key, value] of Object.entries(obj)) {
       let td = document.createElement('td')
       td.innerText = value
-      td.addEventListener('click', () => {window.location.href = "/web/dashboard/profile?p=" + name})
       tr.appendChild(td)
     }
     let td = document.createElement('td')
@@ -81,20 +81,30 @@ async function deleteRival(friendCode){
 
 document.addEventListener('DOMContentLoaded', async function (e) {
   refreshTable()
-  document.getElementById('addRival').addEventListener('click',function (e) {
-    addRival(document.getElementById('codeInput').value)
-  })
 });
 
 async function refreshTable(){
-  const res = await (await fetch('/api/me/getRivals')).json();
-  const res2 = await (await fetch('/api/getAllPlayers')).json();
-  const table = await createTable(res, "Rivals")
-  const table2 = await createTable(res2, "Users", false, null, false)
-  document.getElementById('tableRivals').innerHTML = '';
-  document.getElementById('tableRivals').appendChild(table)
-  document.getElementById('tableUsers').innerHTML = '';
-  document.getElementById('tableUsers').appendChild(table2)
+  const profileName = location.search.replace(/^.*?\=/, '');
+  try{
+    profile = await (await fetch('/api/profile/' + profileName)).json()
+    scores = await (await fetch('/api/scores/' + profileName)).json()
+    document.getElementById('nameTitle').innerText = profileName.toUpperCase()
+  }
+  catch{
+    document.getElementById('nameTitle').innerText = "NON EXISTANT"
+    return;
+  }
+  const apeca = document.createElement('img')
+  apeca.setAttribute('src', 'https://fairyjoke.net/api/games/sdvx/apecas/' + profile.apecaID + ".png")
+  document.getElementById('apeca').appendChild(apeca)
+  document.getElementById('totalScores').innerText = scores.length
+  document.getElementById('skill').innerText = profile.skillLV
+  document.getElementById('addRival').addEventListener('click',function (e) {
+    addRival(profile.friendCode)
+    window.location.href = '/web/dashboard/users'
+  })
+  console.log(profile)
+  console.log(scores)
 }
 
 async function addRival(friendCode){

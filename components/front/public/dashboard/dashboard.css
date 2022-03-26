@@ -64,6 +64,9 @@ body {
   font-size: .75rem;
   text-transform: uppercase;
 }
+tr{
+  cursor: pointer;
+}
 
 /*
  * Navbar
