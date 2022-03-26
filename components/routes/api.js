@@ -197,10 +197,26 @@ router.get('/api/scores/:username', async(req, res) => {
     if (!req.user) { res.sendStatus(403); return; }
     const user = await db.User.findOne({ where: { ign: req.params.username.toUpperCase() } })
     if (!user) { res.sendStatus(404); return; }
-    const scores = await db.Score.findAll({ where: { cardID: user.cardID },
-        attributes: { exclude: ['cardID'] 
-    }});
-    res.send(scores);
+    const scores = await db.Score.findAll({where : {cardID : user.cardID}, 
+        order: [
+            ['updatedAt', 'DESC']
+        ]
+    })
+    let obj = []
+    for (score of scores) {
+        obj.push({
+            title: "",
+            diff: "",
+            level: "",
+            musicID: score.musicID,
+            musicType: score.musicType,
+            score: score.score,
+            clearType: score.clearType,
+            percentage: score.effectiveRate / 100 + " %",
+            date: (new Date(score.updatedAt)).getTime(),
+        })
+    }
+    res.send(obj)
 })
 
 router.get('/api/profile/:username', async(req, res) => {

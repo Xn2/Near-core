@@ -1,7 +1,8 @@
 let rivals
 let profile
 let scores
-async function createTable(arr, entity, editable = false, customFieldFunc = null, deletable = true) {
+const lamps = ["FAILED", "FAILED", "CLEAR", "EXCESSIVE CLEAR", "ULTIMATE CHAIN", "PUC"]
+async function createTable(arr, entity, editable = false, customFieldFunc = null, deletable = false) {
   if (!arr.length) {
     const warn = document.createElement("h5")
     warn.innerText = `No ${entity} yet. `
@@ -18,7 +19,7 @@ async function createTable(arr, entity, editable = false, customFieldFunc = null
     th.innerText = capitalize(property)
     tr.appendChild(th)
   }
-  if (deletable){
+  if (deletable) {
     let th = document.createElement('th')
     th.setAttribute("scope", "col")
     th.innerText = "Remove"
@@ -67,14 +68,15 @@ function createDeleteButton(friendCode) {
   return deleteButton
 }
 
-async function deleteRival(friendCode){
-  const res = await fetch('/api/me/removeRival', {method : "post",
-  headers: {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json'
-  }, 
-  body : 
-     JSON.stringify({friendCode})
+async function deleteRival(friendCode) {
+  const res = await fetch('/api/me/removeRival', {
+    method: "post",
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body:
+      JSON.stringify({ friendCode })
   })
   document.getElementById(friendCode).remove()
 }
@@ -83,48 +85,69 @@ document.addEventListener('DOMContentLoaded', async function (e) {
   refreshTable()
 });
 
-async function refreshTable(){
+async function refreshTable() {
   const profileName = location.search.replace(/^.*?\=/, '');
-  try{
+  try {
     profile = await (await fetch('/api/profile/' + profileName)).json()
     scores = await (await fetch('/api/scores/' + profileName)).json()
     document.getElementById('nameTitle').innerText = profileName.toUpperCase()
   }
-  catch{
+  catch {
     document.getElementById('nameTitle').innerText = "NON EXISTANT"
     return;
+  }
+  for (score of scores.slice(0, 20)) {
+    const songInfo = await getSongInformation(score.musicID)
+    if (parseInt(score.musicType) === 4) score.musicType = 3
+    score.date = getFormattedDate(score.date)
+    score.clearType = lamps[score.clearType]
+    score.title = songInfo.title
+    if (songInfo.success && songInfo.difficulties.length > 1) {
+        score.diff = songInfo.difficulties[parseInt(score.musicType)].diff
+        score.level = songInfo.difficulties[parseInt(score.musicType)].level
+    }
+    delete score.musicID
+    delete score.musicType
   }
   const apeca = document.createElement('img')
   apeca.setAttribute('src', 'https://fairyjoke.net/api/games/sdvx/apecas/' + profile.apecaID + ".png")
   document.getElementById('apeca').appendChild(apeca)
   document.getElementById('totalScores').innerText = scores.length
   document.getElementById('skill').innerText = profile.skillLV
-  document.getElementById('addRival').addEventListener('click',function (e) {
+  document.getElementById('joined').innerText = getFormattedDate(profile.createdAt)
+  document.getElementById('lastOnline').innerText = getFormattedDate(profile.updatedAt)
+  document.getElementById('addRival').addEventListener('click', function (e) {
     addRival(profile.friendCode)
     window.location.href = '/web/dashboard/users'
   })
+  document.getElementById('recentScores').appendChild(await createTable(scores.slice(0, 20), "scores"))
   console.log(profile)
   console.log(scores)
 }
 
-async function addRival(friendCode){
-  const res = await fetch("/api/me/addRival",{method : "post", headers : {'Accept': 'application/json','Content-Type': 'application/json'}, body : JSON.stringify({friendCode})})
+async function addRival(friendCode) {
+  const res = await fetch("/api/me/addRival", { method: "post", headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify({ friendCode }) })
   refreshTable()
 }
-// 
-async function getSongInformation(mid){
-  const res = await fetch(`https://fairyjoke.net/api/games/sdvx/musics/${mid}`, {mode : "no-cors"})
-  return await res.json();
-}
 
-function getFormattedDate(ts){
+async function getSongInformation(mid) {
+  const res = await fetch(`https://fairyjoke.net/api/games/sdvx/musics/${mid}`)
+  if (res.status != 200) {
+    return { title: "NOT FOUND", diff: "NOT FOUND", level: 0, success: false }
+  }
+  const json = await res.json();
+  json.success = true;
+  return json
+
+}
+function getFormattedDate(ts) {
   const date = new Date(ts)
-  const formatted = `${date.getDate()}`.padStart(2, '0')+
-  "/"+`${(date.getMonth()+1)}`.padStart(2, '0')+
-  "/"+`${date.getFullYear()}`.padStart(2, '0')+
-  " "+`${date.getHours()}`.padStart(2, '0')+
-  ":"+`${date.getMinutes()}`.padStart(2, '0')+
-  ":"+`${date.getSeconds()}`.padStart(2, '0');
+  const formatted = `${date.getDate()}`.padStart(2, '0') +
+    "/" + `${(date.getMonth() + 1)}`.padStart(2, '0') +
+    "/" + `${date.getFullYear()}`.padStart(2, '0') +
+    " " + `${date.getHours()}`.padStart(2, '0') +
+    ":" + `${date.getMinutes()}`.padStart(2, '0') +
+    ":" + `${date.getSeconds()}`.padStart(2, '0');
   return formatted
 }
 
