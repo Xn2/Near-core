@@ -881,7 +881,7 @@ const COURSES6 = [{
     {
         id: 4,
         name: '第2回',
-        isNew: 1,
+        isNew: 0,
         courses: [{
                 id: 10,
                 type: 0,
