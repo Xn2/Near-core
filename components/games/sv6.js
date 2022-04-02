@@ -930,6 +930,7 @@ async function getSV6PlaySData() {
         ]
     }
 }
+
 async function getSV6SaveEData() {
     return {
         "declaration": {
@@ -1747,6 +1748,11 @@ async function saveSV6(session, cardID, configContents) {
             db.Param.create({ cardID, type: entry.type._text, paramID: entry.id._text, param: entry.param._text })
         }
     }
+    if(typeof configContents.courses !== "undefined"){
+        const skillContents = configContents.courses
+        skillContents.refID = {_text : cardID}
+        SaveSV6SkillData(session, skillContents)
+    }
     else {
         for (newParam of configContents.param.info) {
             let exists = false
@@ -2084,7 +2090,7 @@ async function SaveSV6SkillData(session, skillContents) {
             tr3: trackIDs[2]
         })
     }
-    else if (typeof "alreadyDone.sc" !== "undefined" && parseInt(skillContents.sc._text) > alreadyDone.sc) {
+    else if (typeof alreadyDone.sc !== "undefined" && parseInt(skillContents.sc._text) > alreadyDone.sc) {
         await alreadyDone.update({
             sc: skillContents.sc._text,
             ex: skillContents.ex._text,
@@ -2103,7 +2109,7 @@ async function SaveSV6SkillData(session, skillContents) {
             tr3: trackIDs[2]
         })
     }
-    else if (typeof "alreadyDone.sc" !== "undefined") {
+    else if (typeof alreadyDone.sc !== "undefined") {
         await alreadyDone.update({
             cnt: parseInt(alreadyDone.cnt) + 1,
         })
