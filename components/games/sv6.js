@@ -1748,10 +1748,10 @@ async function saveSV6(session, cardID, configContents) {
             db.Param.create({ cardID, type: entry.type._text, paramID: entry.id._text, param: entry.param._text })
         }
     }
-    if(typeof configContents.courses !== "undefined"){
-        const skillContents = configContents.courses
-        skillContents.refID = {_text : cardID}
-        SaveSV6SkillData(session, skillContents)
+    if(typeof configContents.course !== "undefined"){
+        const skillContents = configContents.course
+        skillContents.refid = {_text : cardID}
+        await SaveSV6SkillData(session, skillContents)
     }
     else {
         for (newParam of configContents.param.info) {
@@ -2070,7 +2070,7 @@ async function SaveSV6SkillData(session, skillContents) {
     if (!alreadyDone) {
         await db.Skill.create({
             cardID: skillContents.refid._text,
-            playID: skillContents.play_id._text,
+            playID: 1337,
             ssnid: skillContents.ssnid._text,
             crsid: skillContents.crsid._text,
             sc: skillContents.sc._text,
@@ -2084,7 +2084,7 @@ async function SaveSV6SkillData(session, skillContents) {
             cm: skillContents.cm._text,
             ar: skillContents.ar._text,
             cnt: "1",
-            locid: skillContents.locid._text,
+            locid: 92,
             tr1: trackIDs[0],
             tr2: trackIDs[1],
             tr3: trackIDs[2]
