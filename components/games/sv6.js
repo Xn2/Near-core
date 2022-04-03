@@ -2103,7 +2103,7 @@ async function SaveSV6SkillData(session, skillContents) {
             cm: skillContents.cm._text,
             ar: skillContents.ar._text,
             cnt: parseInt(alreadyDone.cnt) + 1,
-            locid: skillContents.locid._text,
+            locid: 92,
             tr1: trackIDs[0],
             tr2: trackIDs[1],
             tr3: trackIDs[2]
