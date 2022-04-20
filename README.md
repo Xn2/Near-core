@@ -1,6 +1,6 @@
 
 # Near-Core
-### E-Amusement Server for Sound Voltex 5 & 6 written in Node.js.
+### E-Amusement Server for Sound Voltex 6 written in Node.js.
 
 ## Why?
 
