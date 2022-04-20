@@ -137,7 +137,7 @@ router.post('/api/me/tachiExport', async(req, res) => {
     }
     for (score of scores) {
         for (song of musicDB) {
-            if (score.musicID == song['@id'])) {
+            if (score.musicID == song['@id']) {
                 const scoreObj = await getTachiScore(score, song)
                 obj.scores.push(scoreObj)
             }
