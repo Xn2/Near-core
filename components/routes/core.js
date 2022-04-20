@@ -133,4 +133,20 @@ router.post('/core', async (req, res) => {
     res.send(ciphered.body);
 })
 
+router.post("/core/KFC*/services/get", (req, res) => {
+    const initResponse = objectFactory.getInitResponseObject();
+    const ciphered = encryptHTTP(initResponse)
+    res.set('X-Eamuse-Info', ciphered.key)
+    res.set('X-Compress', "none");
+    res.send(ciphered.body);
+})
+
+router.post("//KFC*/services/get", (req, res) => {
+    const initResponse = objectFactory.getInitResponseObject();
+    const ciphered = encryptHTTP(initResponse)
+    res.set('X-Eamuse-Info', ciphered.key)
+    res.set('X-Compress', "none");
+    res.send(ciphered.body);
+})
+
 module.exports = router
