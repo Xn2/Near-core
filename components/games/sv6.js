@@ -231,6 +231,7 @@ function getSV6CommonData() {
             });
         }
     }
+    console.log(JSON.stringify(obj))
     return obj
 }
 
