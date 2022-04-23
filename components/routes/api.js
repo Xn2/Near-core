@@ -2,6 +2,7 @@ const router = require("express").Router();
 const db = require('../sequelize')
 const passport = require('../passport.js')
 const musicDB = require('../../data/music_db.json').mdb.music;
+const customSA = require('../../data/custom_SA.json')
 
 router.get("/", async(req, res) => { res.redirect('/web/login') })
 
@@ -61,6 +62,27 @@ router.get('/api/getRecentScores', async(req, res) => {
     res.send(obj)
 })
 
+router.get('/api/getCustomSACourses', async(req, res) => {
+    if (!req.user) { res.sendStatus(403); return; }
+    let final = []
+    for (course of customSA) {
+        final.push({id : course.id, name : course.name, tracks : course.tracks}) 
+    }
+    res.send(final)
+})
+
+router.get('/api/getCustomSAScores/:id', async(req, res) => {
+    if (!req.user) { res.sendStatus(403); return; }
+    const result = await db.Skill.findAll({where : {ssnid : 6, crsid : req.params.id}, order: [
+        ['sc', 'DESC'],
+    ],})
+    const final = []
+    for (score of result){
+        const player = await db.User.findOne({where : {cardID : score.cardID}})
+        final.push({player : player.ign, score : score.sc, clearType : score.ct, date : score.updatedAt})
+    }
+    res.send(final)
+})
 
 router.post('/api/me/addRival', async(req, res) => {
     if (!req.user) { res.sendStatus(403); return; }
