@@ -104,3 +104,6 @@ dist
 .tern-port
 
 db/
+
+custom_SA.json
+config.json
