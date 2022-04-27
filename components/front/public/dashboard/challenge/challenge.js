@@ -87,12 +87,25 @@ document.addEventListener('DOMContentLoaded', async function (e) {
 
 async function refreshTable() {
   const id = location.search.replace(/^.*?\=/, '');
+  let course
   try {
     scores = await (await fetch('/api/getCustomSAScores/' + id)).json()
     courses = await (await fetch('/api/getCustomSACourses/')).json()
     for (course of courses){
       if (course.id == id){
         document.getElementById('nameTitle').innerText = course.name
+        let img1 = document.createElement('img')
+        let img2 = document.createElement('img')
+        let img3 = document.createElement('img')
+        img1.setAttribute('src', `https://fairyjoke.net/api/games/sdvx/musics/${course.tracks[0].mid}/NOVICE.png?fallback=default`)
+        img2.setAttribute('src', `https://fairyjoke.net/api/games/sdvx/musics/${course.tracks[1].mid}/NOVICE.png?fallback=default`)
+        img3.setAttribute('src', `https://fairyjoke.net/api/games/sdvx/musics/${course.tracks[2].mid}/NOVICE.png?fallback=default`)
+        img1.style = "border-style : solid; width : 15vw"
+        img2.style = "border-style : solid; width : 15vw"
+        img3.style = "border-style : solid; width : 15vw"
+        document.getElementById('jacket1').appendChild(img1)
+        document.getElementById('jacket2').appendChild(img2)
+        document.getElementById('jacket3').appendChild(img3)
       }
     }
   }
