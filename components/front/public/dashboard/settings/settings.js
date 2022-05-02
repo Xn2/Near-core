@@ -2,6 +2,9 @@ document.addEventListener('DOMContentLoaded', async function (e) {
   document.getElementById('changePasscode').addEventListener('click', function(){
     changePasscode()
   })
+  document.getElementById('changePlayerName').addEventListener('click', function(){
+    changePlayerName()
+  })
   document.getElementById('saveSettings').addEventListener('click', function(){
     setSV6Settings()
   })
@@ -58,6 +61,19 @@ async function changePasscode(){
   else{
     document.getElementById('success1').setAttribute('hidden', 'true')
     document.getElementById('failure').removeAttribute('hidden')
+  }
+}
+
+async function changePlayerName(){
+  const newName = document.getElementById('newName').value
+  const res = await fetch("/api/me/changePlayerName", {method : "post", headers : {'Accept': 'application/json','Content-Type': 'application/json'}, body : JSON.stringify({newName})})
+  if (res.status == 200){
+    document.getElementById('success3').removeAttribute('hidden')
+    document.getElementById('failure3').setAttribute('hidden', 'true')
+  }
+  else{
+    document.getElementById('success3').setAttribute('hidden', 'true')
+    document.getElementById('failure3').removeAttribute('hidden')
   }
 }
 

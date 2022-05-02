@@ -87,6 +87,18 @@
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class='h2'>Settings</h1>
       </div>
+      <h3>Change Player Name</h3><br>
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <input type="text" id='newName' class='form-control' placeholder="New name"><br>
+          </div>
+        </div>
+        <button type='button' class='btn btn-primary' id='changePlayerName'>Change Name</button>
+        <span id ='success3' style='color : green'  hidden='true'><br><br>Name changed.</span>
+        <span id ='failure3' style='color : red' hidden='true'><br><br>Error. Name too long or invalid characters.</span><br>
+      </div>
+      <hr>
       <h3>Change Passcode</h3><br>
       <div class="container">
         <div class="row">
@@ -147,6 +159,7 @@
         </div>
         <button type='button' class="btn btn-primary" id='saveSettings'>Save Settings</button>
         <span style="color : green" hidden id='success2'><br><br>Success! Settings saved.</span>
+        <br>
       </div>
     </main>
   </div>

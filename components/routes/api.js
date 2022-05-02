@@ -84,6 +84,30 @@ router.get('/api/getCustomSAScores/:id', async(req, res) => {
     res.send(final)
 })
 
+router.get('/api/getChartLB/:song/:diff', async(req, res) => {
+    if (!req.user) { res.sendStatus(403); return; }
+    const scores = await db.BestScore.findAll({where : {musicID : req.params.song, musicType : req.params.diff}, order: [
+        ['score', 'DESC'],
+    ],})
+    let obj = []
+    for (score of scores) {
+        const player = await db.User.findOne({ where: { cardID: score.cardID } })
+        obj.push({
+            name: player.ign,
+            title: "",
+            diff: "",
+            level: "",
+            musicID: score.musicID,
+            musicType: score.musicType,
+            score: score.score,
+            clearType: score.clearType,
+            percentage: score.effectiveRate / 100 + " %",
+            date: (new Date(score.updatedAt)).getTime(),
+        })
+    }
+    res.send(obj)
+})
+
 router.post('/api/me/addRival', async(req, res) => {
     if (!req.user) { res.sendStatus(403); return; }
     const user = await db.User.findOne({ where: { cardID: req.user.cardID } });
@@ -260,6 +284,27 @@ router.post('/api/me/changePasscode', async(req, res) => {
         return;
     }
     res.sendStatus('403')
+})
+
+router.post('/api/me/changePlayerName', async(req, res) => {
+    if (!req.user) { res.sendStatus(403); return; }
+    if (!req.body.newName.length) { res.sendStatus(400); return; }
+    const user = await db.User.findOne({ where: { cardID: req.user.cardID } })
+    const alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!?#$&*-."
+    let good = true
+    for (i in req.body.newName.toUpperCase()){
+        if (alpha.indexOf(req.body.newName[i]) === -1){
+            good = false
+            res.sendStatus('400')
+            return;
+        }
+    }
+    if (req.body.newName.length <= 8) {
+        await user.update({ ign: req.body.newName.toUpperCase() });
+        res.sendStatus('200')
+        return;
+    }
+    res.sendStatus('400')
 })
 
 router.get('/api/me', (req, res) => {
