@@ -292,15 +292,18 @@ router.post('/api/me/changePlayerName', async(req, res) => {
     const user = await db.User.findOne({ where: { cardID: req.user.cardID } })
     const alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!?#$&*-."
     let good = true
-    for (i in req.body.newName.toUpperCase()){
-        if (alpha.indexOf(req.body.newName[i]) === -1){
+    for (i in req.body.newName){
+        if (alpha.indexOf(req.body.newName.toUpperCase()[i]) === -1){
             good = false
             res.sendStatus('400')
             return;
         }
     }
     if (req.body.newName.length <= 8) {
+        const gameConfig = {...user.gameConfig}
+        gameConfig.name = req.body.newName.toUpperCase()
         await user.update({ ign: req.body.newName.toUpperCase() });
+        await user.update({gameConfig});
         res.sendStatus('200')
         return;
     }
