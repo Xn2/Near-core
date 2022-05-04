@@ -1554,7 +1554,7 @@ const COURSES6 = [
               {
                 no: 0,
                 mid: 1550,
-                mty: 4,
+                mty: 3,
               },
               {
                 no: 1,
@@ -1579,7 +1579,7 @@ const COURSES6 = [
               {
                 no: 0,
                 mid: 495,
-                mty: 4,
+                mty: 3,
               },
               {
                 no: 1,
