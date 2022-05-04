@@ -184,7 +184,7 @@ function getEventLogObject(){
     }
 }
 
-async function getFacilityObject() {
+async function getFacilityObject(ip) {
     return {
         "declaration": {
             "attributes": {
@@ -382,7 +382,7 @@ async function getFacilityObject() {
                                         "elements": [
                                             {
                                                 "type": "text",
-                                                "text": await getPublicIP()
+                                                "text": ip
                                             }
                                         ]
                                     },

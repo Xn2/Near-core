@@ -43,7 +43,8 @@ router.post('/core', async (req, res) => {
             initResponse = objectFactory.getMessageObject();
             break;
         case "facility.get":
-            initResponse = await objectFactory.getFacilityObject();
+            const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress 
+            initResponse = await objectFactory.getFacilityObject(ip);
             break;
         case "pcbevent.put":
             initResponse =  objectFactory.getPcbEventObject();
@@ -120,6 +121,9 @@ router.post('/core', async (req, res) => {
             break;
         case "game.sv6_save":
             initResponse = await sv6.saveSV6(req.contents._attributes.tag, req.contents.game.refid._text, req.contents.game);
+            break;
+        case "game.sv6_entry_s":
+            initResponse = await sv6.getSV6EntrySData();
             break;
         default:
             res.sendStatus(400);
