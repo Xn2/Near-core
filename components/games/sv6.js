@@ -231,7 +231,6 @@ function getSV6CommonData() {
             });
         }
     }
-    console.log(JSON.stringify(obj))
     return obj
 }
 
@@ -729,6 +728,8 @@ async function completeSV6PlayerAccount(cardID, ign, session) {
     }
 }
 
+
+
 async function getSV6FrozenData() {
     return {
         "declaration": {
@@ -748,6 +749,44 @@ async function getSV6FrozenData() {
                         "attributes": {
                             "status": "0"
                         }
+                    }
+                ]
+            }
+        ]
+    }
+}
+
+async function getSV6EntrySData() {
+    return {
+        "declaration": {
+            "attributes": {
+                "version": "1.0",
+                "encoding": "UTF-8"
+            }
+        },
+        "elements": [
+            {
+                "type": "element",
+                "name": "response",
+                "elements": [
+                    {
+                        "type": "element",
+                        "name": "game",
+                        "elements" : [
+                            {
+                                "type": "element",
+                                "name" : "entry_id",
+                                "attributes" : {
+                                    "__type" : "u32"
+                                },
+                                "elements" : [
+                                    {
+                                        "type" : "text",
+                                        "text" : "1"
+                                    }
+                                ]
+                            }
+                        ]
                     }
                 ]
             }
@@ -2291,5 +2330,5 @@ const types = {
     'date': '[object Date]',
 }
 
-const functions = { getSV6CommonData, getSV6InquireData, getSV6AuthpassData, createSV6PlayerAccount, completeSV6PlayerAccount, loadSV6PlayerAccount, getSV6RivalData, getSV6LoadMData, getSV6FrozenData, saveSV6Score, saveSV6, getSV6PlaySData, getSV6LoungeData, getSV6SaveEData, getSV6PaseliCheckinData, getSV6PaseliConsumeData, getSV6PaseliCheckoutData, getSV6ShopData, SaveSV6SkillData, getSV6HiScoreData }
+const functions = { getSV6CommonData, getSV6InquireData, getSV6AuthpassData, createSV6PlayerAccount, completeSV6PlayerAccount, loadSV6PlayerAccount, getSV6RivalData, getSV6LoadMData, getSV6FrozenData, saveSV6Score, saveSV6, getSV6PlaySData, getSV6LoungeData, getSV6SaveEData, getSV6PaseliCheckinData, getSV6PaseliConsumeData, getSV6PaseliCheckoutData, getSV6ShopData, SaveSV6SkillData, getSV6HiScoreData, getSV6EntrySData}
 module.exports = functions
