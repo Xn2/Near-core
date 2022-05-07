@@ -1527,6 +1527,141 @@ async function loadSV6PlayerAccount(cardID, session) {
                             },
                             {
                                 "type": "element",
+                                "name": "arena",
+                                "elements": [
+                                    {
+                                        "type": "element",
+                                        "name": "last_play_season",
+                                        "attributes": {
+                                            "__type": "u32"
+                                        },
+                                        "elements": [
+                                            {
+                                                "type": "text",
+                                                "text": "10"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "element",
+                                        "name": "rank_point",
+                                        "attributes": {
+                                            "__type": "u32"
+                                        },
+                                        "elements": [
+                                            {
+                                                "type": "text",
+                                                "text": "1000"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "element",
+                                        "name": "shop_point",
+                                        "attributes": {
+                                            "__type": "u32"
+                                        },
+                                        "elements": [
+                                            {
+                                                "type": "text",
+                                                "text": "10"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "element",
+                                        "name": "ultimate_rate",
+                                        "attributes": {
+                                            "__type": "u32"
+                                        },
+                                        "elements": [
+                                            {
+                                                "type": "text",
+                                                "text": "1"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "element",
+                                        "name": "rank_play_cnt",
+                                        "attributes": {
+                                            "__type": "u32"
+                                        },
+                                        "elements": [
+                                            {
+                                                "type": "text",
+                                                "text": "1"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "element",
+                                        "name": "ultimate_play_cnt",
+                                        "attributes": {
+                                            "__type": "u32"
+                                        },
+                                        "elements": [
+                                            {
+                                                "type": "text",
+                                                "text": "1"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "something",
+                                "elements": [
+                                    {
+                                        "type": "element",
+                                        "name": "ranking_id",
+                                        "attributes": {
+                                            "__type": "u32"
+                                        },
+                                        "elements": [
+                                            {
+                                                "type": "text",
+                                                "text": "3"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "element",
+                                        "name": "value",
+                                        "attributes": {
+                                            "__type": "u8"
+                                        },
+                                        "elements": [
+                                            {
+                                                "type": "text",
+                                                "text": "1"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "element",
+                                "name": "festival",
+                                "elements": [
+                                    {
+                                        "type": "element",
+                                        "name": "fes_id",
+                                        "attributes": {
+                                            "__type": "u32"
+                                        },
+                                        "elements": [
+                                            {
+                                                "type": "text",
+                                                "text": "0"
+                                            }
+                                        ]
+                                    },
+                                ]
+                            },
+                            {
+                                "type": "element",
                                 "name": "skill",
                                 "elements": await getSkillAnalyzerCourses(cardID)
                             },

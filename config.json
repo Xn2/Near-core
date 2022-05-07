@@ -3,5 +3,5 @@
     "eamuse_secretKey" : "69D74627D985EE2187161570D08D93B12455035B6DF0D8205DF5",
     "baseURL" : "http://localhost:5773/core",
     "arcadeName" : "Near",
-    "sequelize_debug" : false
+    "sequelize_debug" : true
 }

@@ -43,7 +43,9 @@ router.post('/core', async (req, res) => {
             initResponse = objectFactory.getMessageObject();
             break;
         case "facility.get":
-            const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress 
+            let ip = req.headers['x-forwarded-for'] || req.ip
+            if (ip.indexOf(':') !== -1) ip = ip.split(':')[ip.split(':').length - 1]
+            console.log(ip)
             initResponse = await objectFactory.getFacilityObject(ip);
             break;
         case "pcbevent.put":

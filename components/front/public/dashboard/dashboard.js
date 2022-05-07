@@ -14,6 +14,9 @@ async function createTable(arr, entity, editable = false, customFieldFunc = null
     let header = document.createElement('thead');
     let tr = document.createElement('tr')
     for (property in arr[0]) {
+        if (property == "musicID" || property == 'musicType'){
+            continue
+        }
         let th = document.createElement('th')
         th.setAttribute("scope", "col")
         th.innerText = capitalize(property)
@@ -22,11 +25,16 @@ async function createTable(arr, entity, editable = false, customFieldFunc = null
     header.appendChild(tr)
     let body = document.createElement('tbody')
     for (obj of arr) {
+        let id = obj['musicID'] + "-" + obj['musicType']
         let tr = document.createElement('tr');
         tr.setAttribute('id', obj['id'])
         for (const [key, value] of Object.entries(obj)) {
+            if (key == "musicID" || key == 'musicType'){
+                continue
+            }
             let td = document.createElement('td')
             td.innerText = value
+            td.addEventListener('click', () => {window.location.href = "/web/dashboard/score?m=" + id})
             tr.appendChild(td)
         }
         let td = document.createElement('td')
@@ -87,8 +95,6 @@ document.addEventListener('DOMContentLoaded', async function(e) {
             score.diff = songInfo.difficulties[parseInt(score.musicType)].diff
             score.level = songInfo.difficulties[parseInt(score.musicType)].level
         }
-        delete score.musicID
-        delete score.musicType
     }
     const table = await createTable(res, "Recent Scores")
     document.getElementById('table').appendChild(table)

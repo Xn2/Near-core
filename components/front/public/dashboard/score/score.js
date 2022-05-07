@@ -14,9 +14,6 @@ async function createTable(arr, entity, editable = false, customFieldFunc = null
   let header = document.createElement('thead');
   let tr = document.createElement('tr')
   for (property in arr[0]) {
-    if (property == "musicID" || property == 'musicType'){
-      continue
-    }
     let th = document.createElement('th')
     th.setAttribute("scope", "col")
     th.innerText = capitalize(property)
@@ -31,16 +28,11 @@ async function createTable(arr, entity, editable = false, customFieldFunc = null
   header.appendChild(tr)
   let body = document.createElement('tbody')
   for (obj of arr) {
-    let id = obj['musicID'] + "-" + obj['musicType']
     let tr = document.createElement('tr');
     tr.setAttribute('id', obj['friendCode'])
     for (const [key, value] of Object.entries(obj)) {
-      if (key == "musicID" || key == 'musicType'){
-        continue
-      }
       let td = document.createElement('td')
       td.innerText = value
-      td.addEventListener('click', () => {window.location.href = "/web/dashboard/score?m=" + id})
       tr.appendChild(td)
     }
     let td = document.createElement('td')
@@ -94,40 +86,32 @@ document.addEventListener('DOMContentLoaded', async function (e) {
 });
 
 async function refreshTable() {
-  const profileName = location.search.replace(/^.*?\=/, '');
+  let id = location.search.replace(/^.*?\=/, '');
+  let diff = parseInt(id.split('-')[1])
+  id = id.split('-')[0]
   try {
-    profile = await (await fetch('/api/profile/' + profileName)).json()
-    scores = await (await fetch('/api/scores/' + profileName)).json()
-    document.getElementById('nameTitle').innerText = profileName.toUpperCase()
+    const songInfo = await getSongInformation(id)
+    if (diff === 3 && songInfo.difficulties[songInfo.difficulties.length - 1].diff === "MAXIMUM"){
+      scores = await (await fetch(`/api/getChartLB/${id}/4`)).json()
+    } 
+    else{
+      scores = await (await fetch(`/api/getChartLB/${id}/${diff}`)).json()
+    }
+    document.getElementById('nameTitle').innerText = `${songInfo.title} - ${songInfo.difficulties[diff].diff} ${songInfo.difficulties[diff].level}`
+    let img1 = document.createElement('img')
+    img1.setAttribute('src', `https://fairyjoke.net/api/games/sdvx/musics/${id}/${songInfo.difficulties[diff - 1].diff}.png?fallback=default`)
+    img1.style = "border-style : solid; width : 15vw"
+    document.getElementById('jacket1').appendChild(img1)
   }
   catch {
     document.getElementById('nameTitle').innerText = "NON EXISTANT"
     return;
   }
   for (score of scores.slice(0, 20)) {
-    const songInfo = await getSongInformation(score.musicID)
-    if (parseInt(score.musicType) === 4) score.musicType = 3
     score.date = getFormattedDate(score.date)
     score.clearType = lamps[score.clearType]
-    score.title = songInfo.title
-    if (songInfo.success && songInfo.difficulties.length > 1) {
-        score.diff = songInfo.difficulties[parseInt(score.musicType)].diff
-        score.level = songInfo.difficulties[parseInt(score.musicType)].level
-    }
   }
-  const apeca = document.createElement('img')
-  apeca.setAttribute('src', 'https://fairyjoke.net/api/games/sdvx/apecas/' + profile.apecaID + ".png")
-  document.getElementById('apeca').appendChild(apeca)
-  document.getElementById('totalScores').innerText = scores.length
-  document.getElementById('skill').innerText = profile.skillLV
-  document.getElementById('joined').innerText = getFormattedDate(profile.createdAt)
-  document.getElementById('lastOnline').innerText = getFormattedDate(profile.updatedAt)
-  document.getElementById('addRival').addEventListener('click', function (e) {
-    addRival(profile.friendCode)
-    window.location.href = '/web/dashboard/users'
-  })
   document.getElementById('recentScores').appendChild(await createTable(scores.slice(0, 20), "scores"))
-  console.log(profile)
   console.log(scores)
 }
 
