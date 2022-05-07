@@ -94,13 +94,13 @@ router.get('/api/getChartLB/:song/:diff', async(req, res) => {
         const player = await db.User.findOne({ where: { cardID: score.cardID } })
         obj.push({
             name: player.ign,
-            title: "",
-            diff: "",
-            level: "",
-            musicID: score.musicID,
-            musicType: score.musicType,
             score: score.score,
+            exscore : score.exscore,
+            maxChain : score.maxChain || '∅',
             clearType: score.clearType,
+            critical : score.critical || '∅',
+            near : score.near || '∅',
+            error : score.error || '∅',
             percentage: score.effectiveRate / 100 + " %",
             date: (new Date(score.updatedAt)).getTime(),
         })
