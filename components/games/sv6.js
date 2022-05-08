@@ -2,6 +2,7 @@ const { EVENT6, COURSES6, SDVX_AUTOMATION_SONGS, EXTENDS6 } = require('../../dat
 const db = require('../sequelize.js')
 const config = require('../../config.json')
 const musicdb = require('../../data/music_db.json').mdb.music
+let rooms = []
 
 function getSV6CommonData() {
     let obj = {
@@ -33,7 +34,105 @@ function getSV6CommonData() {
                             "type": "element",
                             "name": "skill_course",
                             "elements": []
-                        }]
+                        },
+                        {
+                            "type": "element",
+                            "name": "arena",
+                            "elements": [
+                                {
+                                    "type": "element",
+                                    "name": "season",
+                                    "attributes": {
+                                        "__type": "u16"
+                                    },
+                                    "elements": [
+                                        {
+                                            "type": "text",
+                                            "text": "0"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "element",
+                                    "name": "time_start",
+                                    "attributes": {
+                                        "__type": "time"
+                                    },
+                                    "elements": [
+                                        {
+                                            "type": "text",
+                                            "text": "1651704980"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "element",
+                                    "name": "time_end",
+                                    "attributes": {
+                                        "__type": "time"
+                                    },
+                                    "elements": [
+                                        {
+                                            "type": "text",
+                                            "text": "1652704980"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "element",
+                                    "name": "shop_start",
+                                    "attributes": {
+                                        "__type": "time"
+                                    },
+                                    "elements": [
+                                        {
+                                            "type": "text",
+                                            "text": "1651704980"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "element",
+                                    "name": "shop_end",
+                                    "attributes": {
+                                        "__type": "time"
+                                    },
+                                    "elements": [
+                                        {
+                                            "type": "text",
+                                            "text": "1652704980"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "element",
+                                    "name": "is_open",
+                                    "attributes": {
+                                        "__type": "bool"
+                                    },
+                                    "elements": [
+                                        {
+                                            "type": "text",
+                                            "text": "1"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "element",
+                                    "name": "is_shop",
+                                    "attributes": {
+                                        "__type": "bool"
+                                    },
+                                    "elements": [
+                                        {
+                                            "type": "text",
+                                            "text": "1"
+                                        }
+                                    ]
+                                },
+                            ]
+                        },
+                        ]
                     }
                 ]
             }
@@ -756,41 +855,163 @@ async function getSV6FrozenData() {
     }
 }
 
-async function getSV6EntrySData() {
-    return {
-        "declaration": {
-            "attributes": {
-                "version": "1.0",
-                "encoding": "UTF-8"
+async function genID(){
+    const alpha = "abcdefghijklmnopqrstuvwxyz0123456789"
+    let ID = ""
+    for (let i = 0 ; i > 16; i++){
+        ID += alpha[Math.floor(Math.random() * alpha.length)]
+    }
+    return ID
+}
+
+async function getSV6EntrySData(session, contents) {
+    let slotAvailable = false
+    let roomIndex = -1
+    if (rooms.length) {
+        for (i in rooms){
+            if (rooms[i].players.length != 4){
+                slotAvailable = true 
+                roomIndex = i
             }
-        },
-        "elements": [
+        }
+    }
+    if (!slotAvailable){
+        const id = await genID()
+        rooms.push({
+            id : id,
+            mid : parseInt(contents.mid._text) || 0,
+            players : [{ session, globalIP : contents.gip._text, localIP : contents.lip._text, port : contents.port._text }],
+        })
+        setTimeout(function(){
+            const search = (element) => element.id = id;
+            const index = rooms.findIndex(search)
+            rooms.splice(index, 1);
+        }, 90000)
+        console.log(JSON.stringify(rooms))
+        return {
+            "declaration": {
+                "attributes": {
+                    "version": "1.0",
+                    "encoding": "UTF-8"
+                }
+            },
+            "elements": [
+                {
+                    "type": "element",
+                    "name": "response",
+                    "elements": [
+                        {
+                            "type": "element",
+                            "name": "game",
+                            "elements" : [
+                                {
+                                    "type": "element",
+                                    "name" : "entry_id",
+                                    "attributes" : {
+                                        "__type" : "u32"
+                                    },
+                                    "elements" : [
+                                        {
+                                            "type" : "text",
+                                            "text" : "0"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+    else{
+        let secondcall = false
+        const data = [
             {
                 "type": "element",
-                "name": "response",
-                "elements": [
+                "name" : "entry_id",
+                "attributes" : {
+                    "__type" : "u32"
+                },
+                "elements" : [
                     {
-                        "type": "element",
-                        "name": "game",
-                        "elements" : [
-                            {
-                                "type": "element",
-                                "name" : "entry_id",
-                                "attributes" : {
-                                    "__type" : "u32"
-                                },
-                                "elements" : [
-                                    {
-                                        "type" : "text",
-                                        "text" : "1"
-                                    }
-                                ]
-                            }
-                        ]
+                        "type" : "text",
+                        "text" : "0"
                     }
                 ]
             }
         ]
+        for(player of rooms[roomIndex].players){
+            if (player.globalIP === contents.gip._text) secondcall = true
+            data.push({
+                "type": "element",
+                "name" : "entry",
+                "elements" : [
+                    {
+                        "type": "element",
+                        "name" : "port",
+                        "attributes" : {
+                            "__type" : "u16"
+                        },
+                        "elements" : [
+                            {
+                                "type" : "text",
+                                "text" : player.port
+                            }
+                        ]
+                    },
+                    {
+                        "type": "element",
+                        "name" : "gip",
+                        "attributes" : {
+                            "__type" : "4u8"
+                        },
+                        "elements" : [
+                            {
+                                "type" : "text",
+                                "text" : player.globalIP
+                            }
+                        ]
+                    },
+                    {
+                        "type": "element",
+                        "name" : "lip",
+                        "attributes" : {
+                            "__type" : "4u8"
+                        },
+                        "elements" : [
+                            {
+                                "type" : "text",
+                                "text" : player.localIP
+                            }
+                        ]
+                    },
+                ]
+            })
+        }
+        if(!secondcall) rooms[roomIndex].players.push({ session, globalIP : contents.gip._text, localIP : contents.lip._text, port : contents.port._text })
+        console.log(JSON.stringify(rooms))
+        return {
+            "declaration": {
+                "attributes": {
+                    "version": "1.0",
+                    "encoding": "UTF-8"
+                }
+            },
+            "elements": [
+                {
+                    "type": "element",
+                    "name": "response",
+                    "elements": [
+                        {
+                            "type": "element",
+                            "name": "game",
+                            "elements" : data
+                        }
+                    ]
+                }
+            ]
+        }
     }
 }
 
@@ -1531,27 +1752,14 @@ async function loadSV6PlayerAccount(cardID, session) {
                                 "elements": [
                                     {
                                         "type": "element",
-                                        "name": "last_play_season",
-                                        "attributes": {
-                                            "__type": "u32"
-                                        },
-                                        "elements": [
-                                            {
-                                                "type": "text",
-                                                "text": "10"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "type": "element",
                                         "name": "rank_point",
                                         "attributes": {
-                                            "__type": "u32"
+                                            "__type": "u16"
                                         },
                                         "elements": [
                                             {
                                                 "type": "text",
-                                                "text": "1000"
+                                                "text": "20000"
                                             }
                                         ]
                                     },
@@ -1559,12 +1767,12 @@ async function loadSV6PlayerAccount(cardID, session) {
                                         "type": "element",
                                         "name": "shop_point",
                                         "attributes": {
-                                            "__type": "u32"
+                                            "__type": "u16"
                                         },
                                         "elements": [
                                             {
                                                 "type": "text",
-                                                "text": "10"
+                                                "text": "20000"
                                             }
                                         ]
                                     },
@@ -1572,7 +1780,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                         "type": "element",
                                         "name": "ultimate_rate",
                                         "attributes": {
-                                            "__type": "u32"
+                                            "__type": "u16"
                                         },
                                         "elements": [
                                             {
@@ -1585,71 +1793,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                         "type": "element",
                                         "name": "rank_play_cnt",
                                         "attributes": {
-                                            "__type": "u32"
-                                        },
-                                        "elements": [
-                                            {
-                                                "type": "text",
-                                                "text": "1"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "type": "element",
-                                        "name": "ultimate_play_cnt",
-                                        "attributes": {
-                                            "__type": "u32"
-                                        },
-                                        "elements": [
-                                            {
-                                                "type": "text",
-                                                "text": "1"
-                                            }
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "type": "element",
-                                "name": "something",
-                                "elements": [
-                                    {
-                                        "type": "element",
-                                        "name": "ranking_id",
-                                        "attributes": {
-                                            "__type": "u32"
-                                        },
-                                        "elements": [
-                                            {
-                                                "type": "text",
-                                                "text": "3"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "type": "element",
-                                        "name": "value",
-                                        "attributes": {
-                                            "__type": "u8"
-                                        },
-                                        "elements": [
-                                            {
-                                                "type": "text",
-                                                "text": "1"
-                                            }
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "type": "element",
-                                "name": "festival",
-                                "elements": [
-                                    {
-                                        "type": "element",
-                                        "name": "fes_id",
-                                        "attributes": {
-                                            "__type": "u32"
+                                            "__type": "u16"
                                         },
                                         "elements": [
                                             {
@@ -1658,6 +1802,19 @@ async function loadSV6PlayerAccount(cardID, session) {
                                             }
                                         ]
                                     },
+                                    {
+                                        "type": "element",
+                                        "name": "ultimate_play_cnt",
+                                        "attributes": {
+                                            "__type": "u16"
+                                        },
+                                        "elements": [
+                                            {
+                                                "type": "text",
+                                                "text": "0"
+                                            }
+                                        ]
+                                    }
                                 ]
                             },
                             {

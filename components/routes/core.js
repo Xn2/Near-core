@@ -125,7 +125,7 @@ router.post('/core', async (req, res) => {
             initResponse = await sv6.saveSV6(req.contents._attributes.tag, req.contents.game.refid._text, req.contents.game);
             break;
         case "game.sv6_entry_s":
-            initResponse = await sv6.getSV6EntrySData();
+            initResponse = await sv6.getSV6EntrySData(req.contents._attributes.tag, req.contents.game);
             break;
         default:
             res.sendStatus(400);
