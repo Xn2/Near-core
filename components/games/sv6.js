@@ -1754,7 +1754,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                         "type": "element",
                                         "name": "rank_point",
                                         "attributes": {
-                                            "__type": "u16"
+                                            "__type": "s32"
                                         },
                                         "elements": [
                                             {
@@ -1767,7 +1767,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                         "type": "element",
                                         "name": "shop_point",
                                         "attributes": {
-                                            "__type": "u16"
+                                            "__type": "s32"
                                         },
                                         "elements": [
                                             {
@@ -1780,7 +1780,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                         "type": "element",
                                         "name": "ultimate_rate",
                                         "attributes": {
-                                            "__type": "u16"
+                                            "__type": "s32"
                                         },
                                         "elements": [
                                             {
@@ -1798,7 +1798,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                         "elements": [
                                             {
                                                 "type": "text",
-                                                "text": "0"
+                                                "text": "1"
                                             }
                                         ]
                                     },
@@ -1811,7 +1811,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                         "elements": [
                                             {
                                                 "type": "text",
-                                                "text": "0"
+                                                "text": "1"
                                             }
                                         ]
                                     }
