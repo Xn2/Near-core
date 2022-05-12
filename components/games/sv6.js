@@ -1759,7 +1759,7 @@ async function loadSV6PlayerAccount(cardID, session) {
                                         "elements": [
                                             {
                                                 "type": "text",
-                                                "text": "20000"
+                                                "text": "22000"
                                             }
                                         ]
                                     },
