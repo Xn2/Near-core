@@ -7,7 +7,7 @@ const customSA = require('../../data/custom_SA.json')
 router.get("/", async(req, res) => { res.redirect('/web/login') })
 
 router.post('/api/register', passport.authenticate('register', {
-    successRedirect: '/api/nok',
+    successRedirect: '/api/ok',
     failureRedirect: '/api/nok'
 }))
 
