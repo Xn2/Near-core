@@ -7,7 +7,7 @@ const customSA = require('../../data/custom_SA.json')
 router.get("/", async(req, res) => { res.redirect('/web/login') })
 
 router.post('/api/register', passport.authenticate('register', {
-    successRedirect: '/api/ok',
+    successRedirect: '/api/code .ok',
     failureRedirect: '/api/nok'
 }))
 
@@ -82,6 +82,76 @@ router.get('/api/getCustomSAScores/:id', async(req, res) => {
         final.push({player : player.ign, score : score.sc, clearType : score.ct, date : score.updatedAt})
     }
     res.send(final)
+})
+
+router.get('/api/serverStats', async(req, res) => {
+    if (!req.user) { res.sendStatus(403); return; }
+    const scores = await db.Score.findAll()
+    const bestScores = await db.BestScore.findAll()
+    const users = await db.User.findAll()
+    const stats = {}
+
+    //Total number of native scores & imported scores
+    stats.totalScores = scores.length
+    stats.totalNativeScores = 0
+    stats.totalImportedScores = 0
+    //Total number of S
+    stats.totalS = 0
+    //Total number of UC
+    stats.totalUC = 0
+    //Total number of PUC
+    stats.totalPUC = 0
+    //Total added scores
+    stats.totalAddedScores = 0
+    for (score of scores){
+        if (score.maxChain) stats.totalNativeScores++
+        else stats.totalImportedScores++
+        if (score.score >= 9900000) stats.totalS++
+        if (score.clearType === 4) stats.totalUC++
+        if (score.clearType === 5) stats.totalPUC++
+        stats.totalAddedScores += score.score
+    }
+    //Total number of users
+    stats.totalUsers = users.length
+    //Total credits played
+    stats.totalPlaycount = 0
+    //Average Skill LV
+    stats.averageSkillLV = 0
+    for (user of users){
+        stats.totalPlaycount += parseInt(user.gameConfig.play_count)
+        stats.averageSkillLV += user.skillLV 
+    }
+    stats.averageSkillLV = parseInt((stats.averageSkillLV / users.length).toFixed(2))
+    //Average score
+    stats.averageScore = parseInt((stats.totalAddedScores / scores.length).toFixed(0))
+    //Days since launch
+    const launchDate = new Date("03/09/2022").getTime()
+    const today = new Date().getTime()
+    const milliDiff = today - launchDate
+    const dayDiff = parseInt((milliDiff / (1000 * 3600 * 24)).toFixed(0));
+    stats.daysSinceLaunch = dayDiff
+    //Average scores per day since launch
+    stats.averageScoresPerDay = parseInt((stats.totalNativeScores / dayDiff).toFixed(2))
+    //Scores today
+    const startOfDay = new Date();
+    startOfDay.setUTCHours(0, 0, 0, 0);
+    stats.scoresToday = 0
+    for(score of scores){
+        if (new Date(score.createdAt).getTime >= startOfDay.getTime()) stats.scoresToday++
+    }
+    //Uptime
+    stats.uptime = process.uptime((stats.totalAddedScores / scores.length).toFixed(0))
+    //Current commit
+    stats.currentCommit = require('child_process')
+    .execSync('git rev-parse HEAD')
+    .toString().trim().slice(0, 7)
+    //Database size
+    const fs = require("fs");
+    const stat = fs.statSync("./db/db.sqlite")
+    const fileSizeInBytes = stat.size;
+    const fileSizeInMegabytes = `${fileSizeInBytes / (1024*1024).toFixed(2)} MB`;
+    stats.databaseSize = fileSizeInMegabytes
+    res.send(stats)
 })
 
 router.get('/api/getChartLB/:song/:diff', async(req, res) => {
@@ -371,5 +441,4 @@ async function formatDiffName(diff, song) {
             break;
     }
 }
-
 module.exports = router
