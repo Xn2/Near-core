@@ -92,6 +92,7 @@ router.get('/api/serverStats', async(req, res) => {
     const stats = {}
     let countedScores = 0
     let countedTotal = 0
+    let countedSkill = 0
 
     //Total number of native scores & imported scores
     stats.totalScores = scores.length
@@ -126,8 +127,11 @@ router.get('/api/serverStats', async(req, res) => {
     for (user of users){
         stats.totalPlaycount += parseInt(user.gameConfig.play_count)
         stats.averageSkillLV += user.skillLV 
+        if (user.skillLV > 0){
+            countedSkill++
+        }
     }
-    stats.averageSkillLV = parseInt((stats.averageSkillLV / users.length).toFixed(2))
+    stats.averageSkillLV = parseInt((stats.averageSkillLV / countedSkill).toFixed(2))
     //Average score
     stats.averageScore = parseInt((countedTotal / countedScores).toFixed(0))
     //Days since launch
