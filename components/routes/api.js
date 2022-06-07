@@ -90,6 +90,8 @@ router.get('/api/serverStats', async(req, res) => {
     const bestScores = await db.BestScore.findAll()
     const users = await db.User.findAll()
     const stats = {}
+    let countedScores = 0
+    let countedTotal = 0
 
     //Total number of native scores & imported scores
     stats.totalScores = scores.length
@@ -109,7 +111,11 @@ router.get('/api/serverStats', async(req, res) => {
         if (score.score >= 9900000) stats.totalS++
         if (score.clearType === 4) stats.totalUC++
         if (score.clearType === 5) stats.totalPUC++
-        stats.totalAddedScores += score.score
+        if (score.score >= 8000000){
+            countedTotal += score.score
+            countedScores++
+        } 
+        stats.totalAddedScores += score.score   
     }
     //Total number of users
     stats.totalUsers = users.length
@@ -123,7 +129,7 @@ router.get('/api/serverStats', async(req, res) => {
     }
     stats.averageSkillLV = parseInt((stats.averageSkillLV / users.length).toFixed(2))
     //Average score
-    stats.averageScore = parseInt((stats.totalAddedScores / scores.length).toFixed(0))
+    stats.averageScore = parseInt((countedTotal / countedScores).toFixed(0))
     //Days since launch
     const launchDate = new Date("03/09/2022").getTime()
     const today = new Date().getTime()
