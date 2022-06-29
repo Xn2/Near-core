@@ -6,7 +6,7 @@
 
  - Because the only other alternative is `A******a`, some chinese closed-source software.
  - Because `A******a` has a 16 player limitation that cannot be easily removed.
- - Because `A******a` does not support `Sound Voltex Exceed Gear` out of the box.
+ - ~~Because `A******a` does not support `Sound Voltex Exceed Gear` out of the box.~~ It does now.
  - Because I wanted to understand how Sound Voltex works inside.
  - Because it's fun.
 
