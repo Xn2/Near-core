@@ -2097,7 +2097,7 @@ async function saveSV6(session, cardID, configContents) {
                 }
             }
             if (!exists) {
-                db.Param.create({ type: newParam.type._text, paramID: newParam.id._text, param: newParam.param._text })
+                db.Param.create({ cardID, type: newParam.type._text, paramID: newParam.id._text, param: newParam.param._text })
             }
         }
     }
