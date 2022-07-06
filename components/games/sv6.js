@@ -886,7 +886,7 @@ async function getSV6EntrySData(session, contents) {
             const search = (element) => element.id = id;
             const index = rooms.findIndex(search)
             rooms.splice(index, 1);
-        }, 90000)
+        }, 10000)
         console.log(JSON.stringify(rooms))
         return {
             "declaration": {
