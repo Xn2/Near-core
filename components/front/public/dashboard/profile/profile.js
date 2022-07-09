@@ -140,28 +140,40 @@ function getLevelName(slvl) {
   switch(slvl) {
     case 1:
       return "岳翔";
+      break;
     case 2:
       return "流星";
+      break;
     case 3:
       return "月衝";
+      break;
     case 4:
       return "瞬光";
+      break;
     case 5:
       return "天極";
+      break;
     case 6:
-      return "烈風";  
+      return "烈風";
+      break;
     case 7:
-      return "雷電";  
+      return "雷電";
+      break;
     case 8:
-      return "麗華";   
+      return "麗華";
+      break;
     case 9:
-      return "魔騎士"; 
+      return "魔騎士";
+      break;
     case 10:
-      return "剛力羅";  
+      return "剛力羅";
+      break;
     case 11:
-      return "或帝滅斗";  
+      return "或帝滅斗"; 
+      break;
     case 12:
       return "暴龍天";
+      break;
   }         
 }
 
