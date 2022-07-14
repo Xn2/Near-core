@@ -197,8 +197,9 @@ router.post('/api/me/addRival', async(req, res) => {
         if (!rival) { res.send("Invalid friend code."); return; }
         if (rival.friendCode === user.friendCode) { res.send("Cannot add self as rival."); return; }
         let rivals = user.rivals
+        for (i in rivals) {
         const check_rival = rivals[i];
-        if (check_rival.friendCode === req.body.friendCode) { res.send("User is alreaDy your rival."); return; }
+        if (check_rival.friendCode === req.body.friendCode) { res.send("User is already your rival."); return; }
         }
         rivals.push({
             name: rival.ign,
