@@ -195,8 +195,11 @@ router.post('/api/me/addRival', async(req, res) => {
         if (user.rivals.length >= 3) { res.send("Rival limit reached."); return; }
         const rival = await db.User.findOne({ where: { friendCode: req.body.friendCode } })
         if (!rival) { res.send("Invalid friend code."); return; }
-        if (rival.friendCode == user.friendCode) { res.send("Cannot add self as rival."); return; }
+        if (rival.friendCode === user.friendCode) { res.send("Cannot add self as rival."); return; }
         let rivals = user.rivals
+        const check_rival = rivals[i];
+        if (check_rival.friendCode === req.body.friendCode) { res.send("User is alreaDy your rival."); return; }
+        }
         rivals.push({
             name: rival.ign,
             friendCode: rival.friendCode,
@@ -207,7 +210,7 @@ router.post('/api/me/addRival', async(req, res) => {
     } else {
         const rival = await db.User.findOne({ where: { friendCode: req.body.friendCode } })
         if (!rival) { res.send("Invalid friend code."); return; }
-        if (rival.friendCode == user.friendCode) { res.send("Cannot add self as rival."); return; }
+        if (rival.friendCode === user.friendCode) { res.send("Cannot add self as rival."); return; }
         let rivals = []
         rivals.push({
             name: rival.ign,
