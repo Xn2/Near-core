@@ -76,7 +76,6 @@ async function deleteRival(friendCode){
   body : 
      JSON.stringify({friendCode})
   })
-  //document.getElementById(friendCode).remove()
   refreshTable()
 }
 
