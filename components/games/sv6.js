@@ -883,7 +883,7 @@ async function getSV6EntrySData(session, contents) {
             players : [{ session, globalIP : contents.gip._text, localIP : contents.lip._text, port : contents.port._text }],
         })
         setTimeout(function(){
-            const search = (element) => element.id = id;
+            const search = (element) => element.id == id;
             const index = rooms.findIndex(search)
             rooms.splice(index, 1);
         }, 10000)
