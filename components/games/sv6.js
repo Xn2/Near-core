@@ -1994,7 +1994,6 @@ async function saveSV6Score(session, scoreContents) {
             await userBest.update({ clearType: scoreObj.clearType, notesOption: scoreObj.notesOption, mode: scoreObj.mode, effectiveRate: scoreObj.effectiveRate })
         }
     }
-    console.log(serverBest)
     if (!serverBest) await db.ServerBest.create({cardID : scoreObj.cardID, musicID : scoreObj.musicID, musicType : scoreObj.musicType, score : scoreObj.score})
     if (serverBest){
         if (parseInt(track.score._text) > serverBest.score) {
