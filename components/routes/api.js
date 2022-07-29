@@ -377,10 +377,8 @@ router.post('/api/me/changePlayerName', async(req, res) => {
     if (!req.body.newName.length) { res.sendStatus(400); return; }
     const user = await db.User.findOne({ where: { cardID: req.user.cardID } })
     const alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!?#$&*-."
-    let good = true
     for (i in req.body.newName){
         if (alpha.indexOf(req.body.newName.toUpperCase()[i]) === -1){
-            good = false
             res.sendStatus('400')
             return;
         }
@@ -443,7 +441,7 @@ async function getTachiScore(score, song) {
 }
 
 async function formatDiffName(diff, song) {
-    const infDiffs = ["MXM", "INF", "GRV", "HVN", "VVD"]
+    const infDiffs = ["MXM", "INF", "GRV", "HVN", "VVD", "XCD"]
     switch (diff) {
         case "novice":
         case "advanced":

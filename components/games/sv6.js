@@ -340,18 +340,9 @@ function scoreSort(a, b) {
 }
 
 async function getSV6HiScoreData() {
-    const bestScores = []
-    for (let i = 0; i < musicdb.length; i++) {
-        for (let j = 0; j < Object.keys(musicdb[i].difficulty).length; j++) {
-            let scores = await db.BestScore.findAll({ where: { musicID: parseInt(musicdb[i]["@id"]), musicType: j + 1 } })
-            if (scores.length) {
-                scores.sort(scoreSort)
-                bestScores.push(scores[0])
-            }
-        }
-    }
+    const scores = await db.ServerBest.findAll();
     const final = [];
-    for (score of bestScores) {
+    for (score of scores) {
         const user = await db.User.findOne({ where: { cardID: score.cardID } })
         final.push({
             "type": "element",
@@ -1954,7 +1945,8 @@ async function getParams(cardID) {
 async function saveSV6Score(session, scoreContents) {
     const user = await db.User.findOne({ where: { cardID: scoreContents.refid._text } })
     const track = scoreContents.track
-    const userBest = await db.BestScore.findOne({ where: { cardID: scoreContents.refid._text, musicID: track.music_id._text, musicType: track.music_type._text } })
+    const userBest = await db.BestScore.findOne({ where: { cardID: scoreContents.refid._text, musicID: track.music_id._text, musicType: track.music_type._text } });
+    const serverBest = await db.ServerBest.findOne({ where: { musicID: track.music_id._text, musicType: track.music_type._text } });
     if (!user) return false;
     if (user.session !== session) return false;
     const scoreObj = {
@@ -1993,13 +1985,20 @@ async function saveSV6Score(session, scoreContents) {
     if (!userBest) db.BestScore.create(scoreObj)
     if (userBest) {
         if (parseInt(track.score._text) > userBest.score) {
-            userBest.update({ score: scoreObj.score, notesOption: scoreObj.notesOption, scoreGrade: scoreObj.scoreGrade, just: scoreObj.just, critical: scoreObj.critical, near: scoreObj.near, error: scoreObj.error, mode: scoreObj.mode, btnRate: scoreObj.btnRate, volRate: scoreObj.volRate, longRate: scoreObj.longRate })
+            await userBest.update({ score: scoreObj.score, notesOption: scoreObj.notesOption, scoreGrade: scoreObj.scoreGrade, just: scoreObj.just, critical: scoreObj.critical, near: scoreObj.near, error: scoreObj.error, mode: scoreObj.mode, btnRate: scoreObj.btnRate, volRate: scoreObj.volRate, longRate: scoreObj.longRate })
         }
         if (parseInt(track.exscore._text) > userBest.exscore) {
-            userBest.update({ exscore: scoreObj.exscore, notesOption: scoreObj.notesOption, just: scoreObj.just, critical: scoreObj.critical, near: scoreObj.near, error: scoreObj.error, mode: scoreObj.mode })
+            await userBest.update({ exscore: scoreObj.exscore, notesOption: scoreObj.notesOption, just: scoreObj.just, critical: scoreObj.critical, near: scoreObj.near, error: scoreObj.error, mode: scoreObj.mode })
         }
         if (parseInt(track.clear_type._text) > userBest.clearType) {
-            userBest.update({ clearType: scoreObj.clearType, notesOption: scoreObj.notesOption, mode: scoreObj.mode, effectiveRate: scoreObj.effectiveRate })
+            await userBest.update({ clearType: scoreObj.clearType, notesOption: scoreObj.notesOption, mode: scoreObj.mode, effectiveRate: scoreObj.effectiveRate })
+        }
+    }
+    console.log(serverBest)
+    if (!serverBest) await db.ServerBest.create({cardID : scoreObj.cardID, musicID : scoreObj.musicID, musicType : scoreObj.musicType, score : scoreObj.score})
+    if (serverBest){
+        if (parseInt(track.score._text) > serverBest.score) {
+            await serverBest.update({ score: scoreObj.score, cardID : scoreObj.cardID})
         }
     }
     return {
