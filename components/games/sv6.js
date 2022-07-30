@@ -2633,6 +2633,29 @@ async function getSkillAnalyzerCourses(cardID) {
     return final
 }
 
+function getSV6ExceptionData(){
+    return {
+        "declaration": {
+            "attributes": {
+                "version": "1.0",
+                "encoding": "UTF-8"
+            }
+        },
+        "elements": [
+            {
+                "type": "element",
+                "name": "response",
+                "elements": [
+                    {
+                        "type": "element",
+                        "name": "game",
+                    }
+                ]
+            }
+        ]
+    }
+}
+
 const types = {
     'get': function (prop) {
         return Object.prototype.toString.call(prop);
@@ -2646,5 +2669,5 @@ const types = {
     'date': '[object Date]',
 }
 
-const functions = { getSV6CommonData, getSV6InquireData, getSV6AuthpassData, createSV6PlayerAccount, completeSV6PlayerAccount, loadSV6PlayerAccount, getSV6RivalData, getSV6LoadMData, getSV6FrozenData, saveSV6Score, saveSV6, getSV6PlaySData, getSV6LoungeData, getSV6SaveEData, getSV6PaseliCheckinData, getSV6PaseliConsumeData, getSV6PaseliCheckoutData, getSV6ShopData, SaveSV6SkillData, getSV6HiScoreData, getSV6EntrySData}
+const functions = { getSV6CommonData, getSV6InquireData, getSV6AuthpassData, createSV6PlayerAccount, completeSV6PlayerAccount, loadSV6PlayerAccount, getSV6RivalData, getSV6LoadMData, getSV6FrozenData, saveSV6Score, saveSV6, getSV6PlaySData, getSV6LoungeData, getSV6SaveEData, getSV6PaseliCheckinData, getSV6PaseliConsumeData, getSV6PaseliCheckoutData, getSV6ShopData, SaveSV6SkillData, getSV6HiScoreData, getSV6EntrySData, getSV6ExceptionData}
 module.exports = functions
