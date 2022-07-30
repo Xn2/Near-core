@@ -875,7 +875,7 @@ async function getSV6FrozenData() {
 async function genID(){
     const alpha = "abcdefghijklmnopqrstuvwxyz0123456789"
     let ID = ""
-    for (let i = 0 ; i > 16; i++){
+    for (let i = 0 ; i < 16; i++){
         ID += alpha[Math.floor(Math.random() * alpha.length)]
     }
     return ID
