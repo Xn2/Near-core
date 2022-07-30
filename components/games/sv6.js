@@ -451,6 +451,32 @@ async function getSV6HiScoreData() {
                             "text": score.score
                         }
                     ]
+                },
+                {
+                    "type": "element",
+                    "name": "avg_sc",
+                    "attributes": {
+                        "__type": "u32"
+                    },
+                    "elements": [
+                        {
+                            "type": "text",
+                            "text": "0"
+                        }
+                    ]
+                },
+                {
+                    "type": "element",
+                    "name": "cr",
+                    "attributes": {
+                        "__type": "s32"
+                    },
+                    "elements": [
+                        {
+                            "type": "text",
+                            "text": "0"
+                        }
+                    ]
                 }
             ]
         }
