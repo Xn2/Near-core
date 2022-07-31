@@ -333,20 +333,17 @@ function getSV6CommonData() {
     return obj
 }
 
+function scoreSort(a, b) {
+    if (a.score < b.score) return 1;
+    if (a.score > b.score) return -1;
+    return 0
+}
+
 async function getSV6HiScoreData() {
     const scores = await db.ServerBest.findAll();
     const final = [];
     for (score of scores) {
         const user = await db.User.findOne({ where: { cardID: score.cardID } })
-        const globalScores = await db.Score.findAll({where : { musicID : score.musicID, musicType : score.musicType}});
-        let avgScore = 0
-        let clearRate = 0
-        for (globalScore of globalScores){
-             avgScore += parseInt(globalScore.score)
-             if(parseInt(globalScore.clearType) > 1) clearRate++
-        }
-        avgScore = (avgScore / globalScores.length).toFixed(0)
-        clearRate = ((clearRate * 100 / globalScores.length)*100).toFixed(0)
         final.push({
             "type": "element",
             "name": "d",
@@ -464,7 +461,7 @@ async function getSV6HiScoreData() {
                     "elements": [
                         {
                             "type": "text",
-                            "text": avgScore.toString()
+                            "text": "0"
                         }
                     ]
                 },
@@ -477,7 +474,7 @@ async function getSV6HiScoreData() {
                     "elements": [
                         {
                             "type": "text",
-                            "text": clearRate.toString()
+                            "text": "0"
                         }
                     ]
                 }
