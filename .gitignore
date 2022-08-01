@@ -107,7 +107,3 @@ db/
 
 custom_SA.json
 config.json
-
-
-# because I am testing on my local network, i am ignoring changes to the config!
-config.json
