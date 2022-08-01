@@ -1,7 +1,7 @@
 {
     "listening_port" : "5773",
     "eamuse_secretKey" : "69D74627D985EE2187161570D08D93B12455035B6DF0D8205DF5",
-    "baseURL" : "http://192.168.1.42:5773/core",
+    "baseURL" : "http://localhost:5773/core",
     "arcadeName" : "Near",
     "sequelize_debug" : false
 }
