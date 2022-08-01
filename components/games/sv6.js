@@ -1979,7 +1979,8 @@ async function getParams(cardID) {
 
 async function saveSV6Score(session, scoreContents) {
     const user = await db.User.findOne({ where: { cardID: scoreContents.refid._text } })
-    const track = scoreContents.track
+    const track = scoreContents.track[scoreContents.track.length - 1];  // <-- Select the last item in the array as
+                                                                        //     the json becomes multiple objects after track 1
     const userBest = await db.BestScore.findOne({ where: { cardID: scoreContents.refid._text, musicID: track.music_id._text, musicType: track.music_type._text } });
     const serverBest = await db.ServerBest.findOne({ where: { musicID: track.music_id._text, musicType: track.music_type._text } });
     if (!user) return false;
